@@ -1,0 +1,13 @@
+DIV.figure {
+  float: right;
+  width: 25%;
+  border: thin silver solid;
+  margin: 0.5em;
+  padding: 0.5em;
+  text-align: center;
+}
+P.caption {
+  font-style: italic;
+  font-size: smaller;
+  text-indent: 0;
+}
