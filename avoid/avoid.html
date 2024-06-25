@@ -1,0 +1,850 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Non-reversible Monte Carlo: an example of “true” self-repelling motion</title>
+<!--Generated on Tue Jun 25 13:43:59 2024 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-article.css" type="text/css">
+<link rel="stylesheet" href="ltx-ulem.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<div class="ltx_page_main">
+<div class="ltx_page_content">
+<article class="ltx_document">
+<h1 class="ltx_title ltx_title_document">Non-reversible Monte Carlo: an example of “true”
+self-repelling motion</h1>
+<div class="ltx_authors">
+<span class="ltx_creator ltx_role_author">
+<span class="ltx_personname">A. C. Maggs
+</span><span class="ltx_author_notes">
+<span class="ltx_contact ltx_role_email"><a href="mailto:anthony.maggs@espci.fr">anthony.maggs@espci.fr</a>
+</span>
+<span class="ltx_contact ltx_role_address">CNRS UMR 7083, ESPCI Paris, Université PSL, 10 rue Vauquelin, 75005 Paris, France.
+</span></span></span>
+</div>
+
+<div class="ltx_abstract">
+<h6 class="ltx_title ltx_title_abstract">Abstract</h6>
+<p class="ltx_p">We link the large-scale dynamics of non-reversible Monte Carlo
+algorithms as well as a lifted TASEP to an exactly soluble model of
+self-repelling motion. We present arguments for the connection between the
+problems and perform simulations, where we show that the empirical
+distribution functions generated from Monte Carlo are well described by the
+analytic solution of self-repelling motion.</p>
+</div>
+<section id="Sx1" class="ltx_section">
+<h2 class="ltx_title ltx_title_section">Introduction</h2>
+
+<div id="Sx1.p1" class="ltx_para">
+<p class="ltx_p">Non-reversible Monte Carlo sampling as developed for hard disks <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib6" title="Event-chain Monte Carlo algorithms for hard-sphere systems" class="ltx_ref">2</a>]</cite>,
+and its generalisation to arbitrary potentials <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib7" title="Generalized event-chain Monte Carlo: Constructing rejection-free global-balance algorithms from infinitesimal steps" class="ltx_ref">17</a>, <a href="#bib.bib13" title="Event-chain Monte Carlo algorithms for three- and many-particle interactions" class="ltx_ref">11</a>, <a href="#bib.bib12" title="All-atom computations with irreversible Markov chains" class="ltx_ref">10</a>]</cite> has many wonderful properties which facilitate the equilibration of
+large complex systems faster than conventional Monte Carlo, or molecular
+dynamics algorithms <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib24" title="Two-dimensional melting: from liquid-hexatic coexistence to continuous transitions" class="ltx_ref">12</a>, <a href="#bib.bib25" title="Two-step melting in two dimensions: first-order liquid-hexatic transition" class="ltx_ref">3</a>]</cite>. <span class="ltx_text" style="color:#000000;"> Such Monte Carlo methods
+do not implement the historic choice of detailed balance, rather the
+weaker condition of global
+balance. This leads to much greater freedom of choice for the implementer of algorithms.</span>
+However, analytic understanding of the large-scale,
+effective dynamics is lacking. This is in strong contrast to, for instance,
+molecular dynamics which generate the Navier-Stokes equations at large
+scales in a fluid. Extensive theoretical analysis of the mode structure of these
+hydrodynamic equations gives us the slow hydrodynamic modes of
+sound, vorticity and heat propagation, which limit the large-scale sampling of a
+fluid.</p>
+</div>
+<div id="Sx1.p2" class="ltx_para">
+<p class="ltx_p">What are the equivalent statements for event-chain Monte Carlo? What are the
+slow, hydrodynamic modes? This letter aims to present the continuum,
+coarse-grained equations describing event-chain simulation and demonstrate their
+equivalence to an exactly soluble model of a growing polymer. Clearly, if one
+understands the temporal evolution of the coarse-grained equations, it will be
+possible to make exact statements on the evolution of densities and
+correlations, and perhaps find better implementations in the future. The present
+letter makes a direct link between event-chain Monte Carlo simulation and “true” self-repelling motion, <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib14" title="Asymptotic behavior of the ”true” self-avoiding walk" class="ltx_ref">1</a>]</cite> which
+has been much studied using a variety of physical methods including
+scaling <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib4" title="”True” self-avoiding walk in one dimension" class="ltx_ref">4</a>, <a href="#bib.bib5" title="Critical dimensionality and exponent of the ”true” self-avoiding walk" class="ltx_ref">21</a>]</cite> and renormalisation <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib1" title="Renormalisation of the ’true’ self-avoiding walk" class="ltx_ref">18</a>]</cite>.
+Recently this model has been studied using advanced methods based on interacting
+Brownian paths, which have led to exact, analytic results for the dynamical
+properties <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib2" title="The true self-repelling motion" class="ltx_ref">22</a>, <a href="#bib.bib20" title="The ”True” Self-Avoiding Walk with Bond Repulsion on ⁢\mathbbZ: Limit Theorems" class="ltx_ref">23</a>, <a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>]</cite>.</p>
+</div>
+<div id="Sx1.p3" class="ltx_para">
+<p class="ltx_p">In this letter, we introduce the self-avoiding model, together with the exact
+results for its time evolution. We then summarise the behaviour of a class of
+non-reversible algorithms before arguing that there is a link
+between these two dynamical systems. Finally, we present numerical evidence as
+to the identity of distribution functions with data coming from event-chain
+simulation of harmonic chains, as well as simulation of a lifted TASEP (Totally
+Asymmetric Simple Exclusion Process).</p>
+</div>
+</section>
+<section id="Sx2" class="ltx_section">
+<h2 class="ltx_title ltx_title_section">True self-avoiding motion</h2>
+
+<div id="Sx2.p1" class="ltx_para">
+<p class="ltx_p">The “true” self-avoiding walk was introduced, <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib14" title="Asymptotic behavior of the ”true” self-avoiding walk" class="ltx_ref">1</a>]</cite> as a
+dynamic model of polymer growth, in contrast to an equilibrated statistical
+ensemble of equilibrated polymers. On a lattice, monomers are added successively
+to a chain, trying to avoid places where the polymer has already passed. The
+probability of choosing a site <math id="Sx2.p1.m1" class="ltx_Math" alttext="i" display="inline"><mi>i</mi></math>, which has been visited <math id="Sx2.p1.m2" class="ltx_Math" alttext="L_{i}(t)" display="inline"><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></math> times is
+then</p>
+<table id="Sx2.E1" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="Sx2.E1.m1" class="ltx_Math" alttext="p_{i}(t+1)=\frac{e^{-\lambda L_{i}(t)}}{\sum_{j}e^{-\lambda L_{j}(t)}}" display="block"><mrow><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>λ</mi><mo>⁢</mo><msub><mi>L</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></msup><mrow><msub><mo>∑</mo><mi>j</mi></msub><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>λ</mi><mo>⁢</mo><msub><mi>L</mi><mi>j</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></msup></mrow></mfrac></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(1)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">Where the sum is over all neighbours <math id="Sx2.p1.m3" class="ltx_Math" alttext="j" display="inline"><mi>j</mi></math> of the current position at time
+<math id="Sx2.p1.m4" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math>. <span class="ltx_text" style="color:#000000;"> <math id="Sx2.p1.m5" class="ltx_Math" alttext="\lambda&gt;0" display="inline"><mrow><mi mathcolor="#000000">λ</mi><mo mathcolor="#000000">&gt;</mo><mn mathcolor="#000000">0</mn></mrow></math> measures the strength of the repelling interaction.</span>
+The model has infinite memory, required to calculate the placement probabilities
+of the new monomer. <span class="ltx_text" style="color:#000000;"> The large-scale behaviour of the process is believed to be
+independent of <math id="Sx2.p1.m6" class="ltx_Math" alttext="\lambda" display="inline"><mi mathcolor="#000000">λ</mi></math> for finite values of the parameter.</span></p>
+</div>
+<div id="Sx2.p2" class="ltx_para">
+<p class="ltx_p">It was argued, <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib14" title="Asymptotic behavior of the ”true” self-avoiding walk" class="ltx_ref">1</a>]</cite> that this dynamic process has a continuum limit so
+that the effective, large-scale behaviour is of the form</p>
+<table id="Sx6.EGx1" class="ltx_equationgroup ltx_eqn_eqnarray ltx_eqn_table">
+
+<tbody id="Sx2.E2"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="Sx2.E2.m1" class="ltx_Math" alttext="\displaystyle\frac{d{\textbf{X}(t)}}{dt}" display="inline"><mstyle displaystyle="true"><mfrac><mrow><mi>d</mi><mo>⁢</mo><mtext class="ltx_mathvariant_bold">X</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>d</mi><mo>⁢</mo><mi>t</mi></mrow></mfrac></mstyle></math></td>
+<td class="ltx_td ltx_align_center ltx_eqn_cell"><math id="Sx2.E2.m2" class="ltx_Math" alttext="\displaystyle=" display="inline"><mo>=</mo></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="Sx2.E2.m3" class="ltx_Math" alttext="\displaystyle-\nabla L(t,{\textbf{X}}(t))+\xi(t)" display="inline"><mrow><mrow><mo rspace="0.167em">−</mo><mrow><mrow><mo rspace="0.167em">∇</mo><mi>L</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mrow><mtext class="ltx_mathvariant_bold">X</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>+</mo><mrow><mi>ξ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(2)</span></td>
+</tr></tbody>
+<tbody id="Sx2.E3"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="Sx2.E3.m1" class="ltx_Math" alttext="\displaystyle\frac{dL(t,{\textbf{x}})}{dt}" display="inline"><mstyle displaystyle="true"><mfrac><mrow><mi>d</mi><mo>⁢</mo><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mtext class="ltx_mathvariant_bold">x</mtext><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>d</mi><mo>⁢</mo><mi>t</mi></mrow></mfrac></mstyle></math></td>
+<td class="ltx_td ltx_align_center ltx_eqn_cell"><math id="Sx2.E3.m2" class="ltx_Math" alttext="\displaystyle=" display="inline"><mo>=</mo></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="Sx2.E3.m3" class="ltx_Math" alttext="\displaystyle\,\,\delta({\textbf{x}}-{\textbf{X}(t)})" display="inline"><mrow><mi>δ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mtext class="ltx_mathvariant_bold">x</mtext><mo>−</mo><mrow><mtext class="ltx_mathvariant_bold">X</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(3)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">The function, <math id="Sx2.p2.m1" class="ltx_Math" alttext="L(t,{\textbf{x}})" display="inline"><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mtext class="ltx_mathvariant_bold">x</mtext><mo stretchy="false">)</mo></mrow></mrow></math>, a <span class="ltx_text ltx_font_italic">local time</span>, cumulates memory as to
+the occupation of the position <math id="Sx2.p2.m2" class="ltx_Math" alttext="{\textbf{X}}(t)" display="inline"><mrow><mtext class="ltx_mathvariant_bold">X</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></math>. <span class="ltx_text" style="color:#000000;"> It is the
+continuum analogue of the discrete variable <math id="Sx2.p2.m3" class="ltx_Math" alttext="L_{i}" display="inline"><msub><mi mathcolor="#000000">L</mi><mi mathcolor="#000000">i</mi></msub></math> of eq.(<a href="#Sx2.E1" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>). We use
+the symbol <math id="Sx2.p2.m4" class="ltx_Math" alttext="L" display="inline"><mi mathcolor="#000000">L</mi></math> for the both the discrete and continuum variables</span>. <span class="ltx_text" style="color:#000000;"> <math id="Sx2.p2.m5" class="ltx_Math" alttext="\xi(t)" display="inline"><mrow><mi mathcolor="#000000">ξ</mi><mo>⁢</mo><mrow><mo mathcolor="#000000" stretchy="false">(</mo><mi mathcolor="#000000">t</mi><mo mathcolor="#000000" stretchy="false">)</mo></mrow></mrow></math> in the
+formulation <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib14" title="Asymptotic behavior of the ”true” self-avoiding walk" class="ltx_ref">1</a>]</cite> corresponds to Gaussian noise.</span> The growth of the end of the
+growing polymer is then repelled by regions where <math id="Sx2.p2.m6" class="ltx_Math" alttext="L(t,{\textbf{x}})" display="inline"><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mtext class="ltx_mathvariant_bold">x</mtext><mo stretchy="false">)</mo></mrow></mrow></math> has become
+large, in a manner which is analogous to the original lattice model. This
+continuum model is amenable to many of the formal methods of field
+theory <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib23" title="Self-avoiding walks" class="ltx_ref">20</a>, <a href="#bib.bib1" title="Renormalisation of the ’true’ self-avoiding walk" class="ltx_ref">18</a>]</cite>.</p>
+</div>
+<section id="Sx2.SSx1" class="ltx_subsection">
+<h3 class="ltx_title ltx_title_subsection">Distributions functions of the model</h3>
+
+<div id="Sx2.SSx1.p1" class="ltx_para">
+<p class="ltx_p">Remarkably, the equations (<a href="#Sx2.E2" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>, <a href="#Sx2.E3" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">3</span></a>) in one dimension
+lead to an explicitly solvable model <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib20" title="The ”True” Self-Avoiding Walk with Bond Repulsion on ⁢\mathbbZ: Limit Theorems" class="ltx_ref">23</a>, <a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>]</cite> involving time
+scaling in <math id="Sx2.SSx1.p1.m1" class="ltx_Math" alttext="t^{2/3}" display="inline"><msup><mi>t</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msup></math> or <math id="Sx2.SSx1.p1.m2" class="ltx_Math" alttext="t^{1/3}" display="inline"><msup><mi>t</mi><mrow><mn>1</mn><mo>/</mo><mn>3</mn></mrow></msup></math> for distribution functions; the Langevin-like
+eq. (<a href="#Sx2.E2" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>), does not lead to Brownian scaling in <math id="Sx2.SSx1.p1.m3" class="ltx_Math" alttext="t^{1/2}" display="inline"><msup><mi>t</mi><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></msup></math>. The exact
+solutions displayed in <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>]</cite> show that two important
+distributions of physical variables exhibit scaling forms:</p>
+<table id="Sx6.EGx2" class="ltx_equationgroup ltx_eqn_eqnarray ltx_eqn_table">
+
+<tbody id="Sx2.E4"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="Sx2.E4.m1" class="ltx_Math" alttext="\displaystyle\rho_{1}(t,x)" display="inline"><mrow><msub><mi>ρ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_td ltx_align_center ltx_eqn_cell"><math id="Sx2.E4.m2" class="ltx_Math" alttext="\displaystyle=" display="inline"><mo>=</mo></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="Sx2.E4.m3" class="ltx_Math" alttext="\displaystyle t^{-2/3}\nu_{1}(xt^{-2/3})" display="inline"><mrow><msup><mi>t</mi><mrow><mo>−</mo><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></mrow></msup><mo>⁢</mo><msub><mi>ν</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>⁢</mo><msup><mi>t</mi><mrow><mo>−</mo><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></mrow></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(4)</span></td>
+</tr></tbody>
+<tbody id="Sx2.E5"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="Sx2.E5.m1" class="ltx_Math" alttext="\displaystyle\rho_{2}(t,h)" display="inline"><mrow><msub><mi>ρ</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>h</mi><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_td ltx_align_center ltx_eqn_cell"><math id="Sx2.E5.m2" class="ltx_Math" alttext="\displaystyle=" display="inline"><mo>=</mo></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="Sx2.E5.m3" class="ltx_Math" alttext="\displaystyle t^{-1/3}\nu_{2}(ht^{-1/3})" display="inline"><mrow><msup><mi>t</mi><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>3</mn></mrow></mrow></msup><mo>⁢</mo><msub><mi>ν</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>h</mi><mo>⁢</mo><msup><mi>t</mi><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>3</mn></mrow></mrow></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(5)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p"><math id="Sx2.SSx1.p1.m4" class="ltx_Math" alttext="\rho_{1}(t,x)" display="inline"><mrow><msub><mi>ρ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math> is the distribution of displacement of the process after time <math id="Sx2.SSx1.p1.m5" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math>;
+in the original polymer problem of <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib14" title="Asymptotic behavior of the ”true” self-avoiding walk" class="ltx_ref">1</a>]</cite> it is the distribution of
+end-to-end separations. <math id="Sx2.SSx1.p1.m6" class="ltx_Math" alttext="\rho_{2}(t,h)" display="inline"><mrow><msub><mi>ρ</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>h</mi><mo stretchy="false">)</mo></mrow></mrow></math> is the distribution of <math id="Sx2.SSx1.p1.m7" class="ltx_Math" alttext="h(t)=L(t,X(t))" display="inline"><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mrow><mi>X</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></math>,
+the density of previous visits to the endpoint of the polymer. The scaling
+functions are</p>
+<table id="Sx6.EGx3" class="ltx_equationgroup ltx_eqn_eqnarray ltx_eqn_table">
+
+<tbody id="Sx2.E6"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="Sx2.E6.m1" class="ltx_Math" alttext="\displaystyle\nu_{1}(x)" display="inline"><mrow><msub><mi>ν</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_td ltx_align_center ltx_eqn_cell"><math id="Sx2.E6.m2" class="ltx_Math" alttext="\displaystyle=" display="inline"><mo>=</mo></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="Sx2.E6.m3" class="ltx_Math" alttext="\displaystyle\sum_{k=1}^{\infty}\frac{p_{k}}{2}\delta^{\prime}_{k}f_{2/3}(%
+\delta^{\prime}_{k}|x|)" display="inline"><mrow><mstyle displaystyle="true"><munderover><mo movablelimits="false">∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi mathvariant="normal">∞</mi></munderover></mstyle><mrow><mstyle displaystyle="true"><mfrac><msub><mi>p</mi><mi>k</mi></msub><mn>2</mn></mfrac></mstyle><mo>⁢</mo><msubsup><mi>δ</mi><mi>k</mi><mo>′</mo></msubsup><mo>⁢</mo><msub><mi>f</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msubsup><mi>δ</mi><mi>k</mi><mo>′</mo></msubsup><mo>⁢</mo><mrow><mo stretchy="false">|</mo><mi>x</mi><mo stretchy="false">|</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(6)</span></td>
+</tr></tbody>
+<tbody id="Sx2.E7"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="Sx2.E7.m1" class="ltx_Math" alttext="\displaystyle\nu_{2}(h)" display="inline"><mrow><msub><mi>ν</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>h</mi><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_td ltx_align_center ltx_eqn_cell"><math id="Sx2.E7.m2" class="ltx_Math" alttext="\displaystyle=" display="inline"><mo>=</mo></math></td>
+<td class="ltx_td ltx_align_left ltx_eqn_cell"><math id="Sx2.E7.m3" class="ltx_Math" alttext="\displaystyle\frac{2\cdot 6^{1/3}\sqrt{\pi}}{\Gamma{(1/3)}^{2}}e^{-(8h^{3})/9}%
+U(1/6,2/3,(8h^{3})/9)" display="inline"><mrow><mstyle displaystyle="true"><mfrac><mrow><mrow><mn>2</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>6</mn><mrow><mn>1</mn><mo>/</mo><mn>3</mn></mrow></msup></mrow><mo>⁢</mo><msqrt><mi>π</mi></msqrt></mrow><mrow><mi mathvariant="normal">Γ</mi><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>3</mn></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mfrac></mstyle><mo>⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>8</mn><mo>⁢</mo><msup><mi>h</mi><mn>3</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mn>9</mn></mrow></mrow></msup><mo>⁢</mo><mi>U</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>6</mn></mrow><mo>,</mo><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow><mo>,</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>8</mn><mo>⁢</mo><msup><mi>h</mi><mn>3</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mn>9</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(7)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p"><math id="Sx2.SSx1.p1.m8" class="ltx_Math" alttext="f_{2/3}(x)" display="inline"><mrow><msub><mi>f</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math> is the Mittag-Leffler function. <math id="Sx2.SSx1.p1.m9" class="ltx_Math" alttext="\delta^{\prime}_{k}" display="inline"><msubsup><mi>δ</mi><mi>k</mi><mo>′</mo></msubsup></math> and <math id="Sx2.SSx1.p1.m10" class="ltx_Math" alttext="p_{k}" display="inline"><msub><mi>p</mi><mi>k</mi></msub></math> are
+calculated from the k’th zero of the derivative of an Airy
+function <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>]</cite>, <math id="Sx2.SSx1.p1.m11" class="ltx_Math" alttext="U" display="inline"><mi>U</mi></math> is a confluent hypergeometric function of the
+second kind <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib16" title="NIST Digital Library of Mathematical Functions" class="ltx_ref">7</a>]</cite>. <span class="ltx_text" style="color:#000000;"> The two functions
+eq. (<a href="#Sx2.E6" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">6</span></a>, <a href="#Sx2.E7" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>), are rather distinctive visually and are far
+from Gaussian. They are plotted, in red, in Figs. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>, <a href="#Sx4.F2" title="Figure 2 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a> </span>.</p>
+</div>
+</section>
+<section id="Sx2.SSx2" class="ltx_subsection">
+<h3 class="ltx_title ltx_title_subsection">Scaling argument for motion</h3>
+
+<div id="Sx2.SSx2.p1" class="ltx_para">
+<p class="ltx_p">A scaling argument <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib5" title="Critical dimensionality and exponent of the ”true” self-avoiding walk" class="ltx_ref">21</a>]</cite>, allows one to find the exponents
+describing the solutions. Let motion occur on the length scale <math id="Sx2.SSx2.p1.m1" class="ltx_Math" alttext="t^{\alpha}" display="inline"><msup><mi>t</mi><mi>α</mi></msup></math> in
+time <math id="Sx2.SSx2.p1.m2" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math>. Then <math id="Sx2.SSx2.p1.m3" class="ltx_Math" alttext="L" display="inline"><mi>L</mi></math> must be of the form</p>
+<table id="Sx2.E8" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="Sx2.E8.m1" class="ltx_Math" alttext="L(t,x)\sim t^{(1-\alpha)}g(x/t^{\alpha})" display="block"><mrow><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∼</mo><mrow><msup><mi>t</mi><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><mo stretchy="false">)</mo></mrow></msup><mo>⁢</mo><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>/</mo><msup><mi>t</mi><mi>α</mi></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(8)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p"><span class="ltx_text" style="color:#000000;">with an unknown scaling function <math id="Sx2.SSx2.p1.m4" class="ltx_Math" alttext="g(x)" display="inline"><mrow><mi mathcolor="#000000">g</mi><mo>⁢</mo><mrow><mo mathcolor="#000000" stretchy="false">(</mo><mi mathcolor="#000000">x</mi><mo mathcolor="#000000" stretchy="false">)</mo></mrow></mrow></math>.</span>
+The driving force from eq. (<a href="#Sx2.E2" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>), <math id="Sx2.SSx2.p1.m5" class="ltx_Math" alttext="-\nabla L(t,x)" display="inline"><mrow><mo rspace="0.167em">−</mo><mrow><mrow><mo rspace="0.167em">∇</mo><mi>L</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></math>, then scales as
+<math id="Sx2.SSx2.p1.m6" class="ltx_Math" alttext="t^{(1-2\alpha)}g^{\prime}(x/t^{\alpha})" display="inline"><mrow><msup><mi>t</mi><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mrow><mn>2</mn><mo>⁢</mo><mi>α</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></msup><mo>⁢</mo><msup><mi>g</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>/</mo><msup><mi>t</mi><mi>α</mi></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></math>. If this force acts over the time <math id="Sx2.SSx2.p1.m7" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math>, it
+generates motion <math id="Sx2.SSx2.p1.m8" class="ltx_Math" alttext="\sim t^{(2-2\alpha)}" display="inline"><mrow><mi></mi><mo>∼</mo><msup><mi>t</mi><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>−</mo><mrow><mn>2</mn><mo>⁢</mo><mi>α</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></msup></mrow></math>. It is natural that this motion is
+comparable to the total extent of the motion, <math id="Sx2.SSx2.p1.m9" class="ltx_Math" alttext="t^{\alpha}" display="inline"><msup><mi>t</mi><mi>α</mi></msup></math>, so
+<math id="Sx2.SSx2.p1.m10" class="ltx_Math" alttext="t^{(2-2\alpha)}" display="inline"><msup><mi>t</mi><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>−</mo><mrow><mn>2</mn><mo>⁢</mo><mi>α</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></msup></math> = <math id="Sx2.SSx2.p1.m11" class="ltx_Math" alttext="t^{\alpha}" display="inline"><msup><mi>t</mi><mi>α</mi></msup></math>, and <math id="Sx2.SSx2.p1.m12" class="ltx_Math" alttext="\alpha=2/3" display="inline"><mrow><mi>α</mi><mo>=</mo><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></mrow></math>.</p>
+</div>
+</section>
+</section>
+<section id="Sx3" class="ltx_section">
+<h2 class="ltx_title ltx_title_section">Event-Chain Monte Carlo</h2>
+
+<div id="Sx3.p1" class="ltx_para">
+<p class="ltx_p">Non-reversible, event-chain Monte Carlo methods are lifted variants of reversible Monte Carlo,
+where a single “active” particle is mobile, and at (to be determined) event
+times transfers motion to another particle, thereby avoiding the rejection step
+of reversible Monte Carlo methods <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib17" title="Irreversible local Markov chains with rapid convergence towards equilibrium" class="ltx_ref">13</a>]</cite>. We here consider event-chain
+algorithms suitable for simulation of models with continuous
+potentials <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib7" title="Generalized event-chain Monte Carlo: Constructing rejection-free global-balance algorithms from infinitesimal steps" class="ltx_ref">17</a>, <a href="#bib.bib12" title="All-atom computations with irreversible Markov chains" class="ltx_ref">10</a>]</cite>.</p>
+</div>
+<div id="Sx3.p2" class="ltx_para">
+<p class="ltx_p">The total energy function is broken into a sum of “factor potentials”. Each of
+these factors is then able to veto the motion of the active particle when a
+stochastic criterion, is violated. <span class="ltx_text" style="color:#000000;"> Vetos in the formulation of
+non-reversible Monte Carlo correspond to moment when a classical reversible
+algorithm would generate a rejection</span>. At the moment of veto, motion then transfers
+to another particle <span class="ltx_text" style="color:#000000;"> allowing forward motion to continue</span>. In the case of the
+sampling of a chain, each particle is in direct interaction with its two
+neighbours, the factor potentials are then just the contribution of each bond to
+the total energy; on a veto event the activity jumps to one of the two neighbours.</p>
+</div>
+<div id="Sx3.p3" class="ltx_para">
+<p class="ltx_p">Particularly exciting results for event-chain simulation were found for low-dimensional
+XY spins <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib11" title="Irreversible Markov chains in spin models: topological excitations" class="ltx_ref">15</a>]</cite> where it was argued that in one dimension the dynamics
+are characterized by a dynamic exponent, <math id="Sx3.p3.m1" class="ltx_Math" alttext="z=1/2" display="inline"><mrow><mi>z</mi><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></math>. This exponent links the
+relaxation time <math id="Sx3.p3.m2" class="ltx_Math" alttext="\tau" display="inline"><mi>τ</mi></math> (in sweeps) of a system <math id="Sx3.p3.m3" class="ltx_Math" alttext="N" display="inline"><mi>N</mi></math> spins via <math id="Sx3.p3.m4" class="ltx_Math" alttext="\tau\sim N^{z}" display="inline"><mrow><mi>τ</mi><mo>∼</mo><msup><mi>N</mi><mi>z</mi></msup></mrow></math>. This result is smaller (hence, better) than is found in conventional
+reversible Monte Carlo or molecular dynamics where one finds <math id="Sx3.p3.m5" class="ltx_Math" alttext="z=2" display="inline"><mrow><mi>z</mi><mo>=</mo><mn>2</mn></mrow></math> or
+<math id="Sx3.p3.m6" class="ltx_Math" alttext="z=1" display="inline"><mrow><mi>z</mi><mo>=</mo><mn>1</mn></mrow></math>. This exceptional scaling was generalized to more general models,
+including hard spheres and Lennard-Jones chains where a detailed study of the
+dynamics was performed <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib8" title="Event-chain Monte Carlo with factor fields" class="ltx_ref">14</a>]</cite>. As noted in <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib8" title="Event-chain Monte Carlo with factor fields" class="ltx_ref">14</a>]</cite>, a dynamic
+exponent of <math id="Sx3.p3.m7" class="ltx_Math" alttext="z=1/2" display="inline"><mrow><mi>z</mi><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></math>, requires that the motion is indeed characterised by
+hyperdiffusion, <math id="Sx3.p3.m8" class="ltx_Math" alttext="x\sim t^{2/3}" display="inline"><mrow><mi>x</mi><mo>∼</mo><msup><mi>t</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msup></mrow></math>. Rather remarkably, independent of the
+underlying physical system the large-scale dynamic processes obey identical
+hyper-diffusive dynamics. We also note that scaling of the form
+eq. (<a href="#Sx2.E5" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5</span></a>) was found for the <span class="ltx_text" style="color:#000000;"> number of visits to the origin
+during a simulation</span> (see in
+particular <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib8" title="Event-chain Monte Carlo with factor fields" class="ltx_ref">14</a>]</cite> Fig. 9).</p>
+</div>
+<div id="Sx3.p4" class="ltx_para">
+<p class="ltx_p">Very similar phenomenology has recently been demonstrated in a lattice model, a
+lifted version of the widely studied simple exclusion
+process <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib18" title="An exactly soluble non-equilibrium system: the asymmetric simple exclusion process" class="ltx_ref">6</a>, <a href="#bib.bib9" title="Lifted TASEP: a Bethe ansatz integrable paradigm for non-reversible Markov chains" class="ltx_ref">9</a>]</cite>. <span class="ltx_text" style="color:#000000;"> This variant of TASEP was designed to mimic certain
+aspects of non-reversible Monte Carlo, in particular the paper
+<cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib9" title="Lifted TASEP: a Bethe ansatz integrable paradigm for non-reversible Markov chains" class="ltx_ref">9</a>]</cite> introduces a new backward transfer of the active particle
+inspired by the factor field construction from <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib8" title="Event-chain Monte Carlo with factor fields" class="ltx_ref">14</a>]</cite></span>. Here too, strong numerical
+evidence, via the Bethe ansatz, points to a non-trivial scaling of
+solutions involving <math id="Sx3.p4.m1" class="ltx_Math" alttext="t^{2/3}" display="inline"><msup><mi>t</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msup></math>, <span class="ltx_text" style="color:#000000;"> without giving access to scaling functions</span>. We conclude that this unusual scaling in time is
+observed in a wide variety of physical models (with very different underlying
+interactions) undergoing non-reversible dynamics subject to balance, without
+detailed balance.</p>
+</div>
+<section id="Sx3.SSx1" class="ltx_subsection">
+<h3 class="ltx_title ltx_title_subsection">Argument for algorithmic optimality</h3>
+
+<div id="Sx3.SSx1.p1" class="ltx_para">
+<p class="ltx_p">We note that motion <math id="Sx3.SSx1.p1.m1" class="ltx_Math" alttext="x\sim t^{2/3}" display="inline"><mrow><mi>x</mi><mo>∼</mo><msup><mi>t</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msup></mrow></math> is optimal for sampling via a single tracer particle (we
+do not consider algorithms involving global updates) leading to complete
+resampling of the modes of a one-dimensional system: Consider a section of <math id="Sx3.SSx1.p1.m2" class="ltx_Math" alttext="l" display="inline"><mi>l</mi></math>
+elements within a system of particles. Peierls argument, <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib19" title="Quelques propriétés typiques des corps solides" class="ltx_ref">19</a>]</cite>, tells
+us that the fluctuations in this section increase as <math id="Sx3.SSx1.p1.m3" class="ltx_Math" alttext="|\Delta l|\sim l^{1/2}" display="inline"><mrow><mrow><mo stretchy="false">|</mo><mrow><mi mathvariant="normal">Δ</mi><mo>⁢</mo><mi>l</mi></mrow><mo stretchy="false">|</mo></mrow><mo>∼</mo><msup><mi>l</mi><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></msup></mrow></math>. After the algorithm that has been run for <math id="Sx3.SSx1.p1.m4" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math> steps to sample
+the system, activity has progressed <math id="Sx3.SSx1.p1.m5" class="ltx_Math" alttext="|x|\sim t^{\alpha}" display="inline"><mrow><mrow><mo stretchy="false">|</mo><mi>x</mi><mo stretchy="false">|</mo></mrow><mo>∼</mo><msup><mi>t</mi><mi>α</mi></msup></mrow></math>. Thus,
+length fluctuations, if the section is fully re-equilibrated, are
+<math id="Sx3.SSx1.p1.m6" class="ltx_Math" alttext="|\Delta l|\sim t^{\alpha/2}" display="inline"><mrow><mrow><mo stretchy="false">|</mo><mrow><mi mathvariant="normal">Δ</mi><mo>⁢</mo><mi>l</mi></mrow><mo stretchy="false">|</mo></mrow><mo>∼</mo><msup><mi>t</mi><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></msup></mrow></math>. From eq. (<a href="#Sx2.E8" title="In Scaling argument for motion ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a>) we see that the number
+of visits to the starting point of the simulation is <math id="Sx3.SSx1.p1.m7" class="ltx_Math" alttext="L(t,0)\sim t^{1-\alpha}" display="inline"><mrow><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></mrow><mo>∼</mo><msup><mi>t</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msup></mrow></math>. If we identify the two expressions for the displacement then
+<math id="Sx3.SSx1.p1.m8" class="ltx_Math" alttext="t^{1-\alpha}\sim|\Delta l|\sim t^{\alpha/2}" display="inline"><mrow><msup><mi>t</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msup><mo>∼</mo><mrow><mo stretchy="false">|</mo><mrow><mi mathvariant="normal">Δ</mi><mo>⁢</mo><mi>l</mi></mrow><mo stretchy="false">|</mo></mrow><mo>∼</mo><msup><mi>t</mi><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></msup></mrow></math>, or <math id="Sx3.SSx1.p1.m9" class="ltx_Math" alttext="\alpha=2/3" display="inline"><mrow><mi>α</mi><mo>=</mo><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></mrow></math>. Thus the
+amplitude of fluctuations, needed to re-equilibrate the section, is comparable to the
+number of returns of the algorithm to the origin, and thus the maximum
+displacement that can be generated for the origin in the time <math id="Sx3.SSx1.p1.m10" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math>.</p>
+</div>
+</section>
+<section id="Sx3.SSx2" class="ltx_subsection">
+<h3 class="ltx_title ltx_title_subsection">Self-repelling motion and non-reversible simulation</h3>
+
+<div id="Sx3.SSx2.p1" class="ltx_para">
+<p class="ltx_p">We now simulate with an event-chain Monte Carlo an elastic chain at temperature, <math id="Sx3.SSx2.p1.m1" class="ltx_Math" alttext="T=1" display="inline"><mrow><mi>T</mi><mo>=</mo><mn>1</mn></mrow></math>, with harmonic
+springs of unit strength, starting with a zero-temperature configuration. For
+concreteness, the active particle moves in the <math id="Sx3.SSx2.p1.m2" class="ltx_Math" alttext="+x" display="inline"><mrow><mo>+</mo><mi>x</mi></mrow></math> direction. The
+algorithm proposes, at each time step, a displacement of the active
+particle which is vetoed after motion by a distance <math id="Sx3.SSx2.p1.m3" class="ltx_Math" alttext="O(1)" display="inline"><mrow><mi>O</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow></math>. Consider now
+a section of the chain, of <math id="Sx3.SSx2.p1.m4" class="ltx_Math" alttext="l+1" display="inline"><mrow><mi>l</mi><mo>+</mo><mn>1</mn></mrow></math> sites of the system <math id="Sx3.SSx2.p1.m5" class="ltx_Math" alttext="[0,l]" display="inline"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi>l</mi><mo stretchy="false">]</mo></mrow></math>, which has been
+uniformly stretched, after running the algorithm for some time. For this to have
+occurred, there must have been more visits to the site labelled <math id="Sx3.SSx2.p1.m6" class="ltx_Math" alttext="l" display="inline"><mi>l</mi></math> than to the
+site <math id="Sx3.SSx2.p1.m7" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math>, for instance for l=4 the zig-zag trajectory
+<math id="Sx3.SSx2.p1.m8" class="ltx_Math" alttext="(01234)(32)(1234)(3)(234)(34)" display="inline"><mrow><mrow><mo stretchy="false">(</mo><mn>01234</mn><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>32</mn><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>1234</mn><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>234</mn><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>34</mn><mo stretchy="false">)</mo></mrow></mrow></math> generates a stretched chain with number of
+visits for each site, <math id="Sx3.SSx2.p1.m9" class="ltx_Math" alttext="L_{i}=[1,2,4,6,\dots]" display="inline"><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>=</mo><mrow><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo><mn>6</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">]</mo></mrow></mrow></math>. This stretching then influences
+the future motion of the active particle. Such a stretch leads to a higher veto
+rate for transfers of the activity to the left of the chain, opposite to the
+gradient in <math id="Sx3.SSx2.p1.m10" class="ltx_Math" alttext="L_{i}" display="inline"><msub><mi>L</mi><mi>i</mi></msub></math>. However, this is exactly the phenomenology of
+eq. (<a href="#Sx2.E2" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>). If the exact details of the local update rule are not
+crucial in the dynamics and some form of large-scale universality applies
+eqs. (<a href="#Sx2.E2" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>, <a href="#Sx2.E3" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">3</span></a>) are clearly candidates for a
+coarse-grained description of the motion generated by event-chain Monte
+Carlo. In event-chain simulation in higher dimension, we understand that
+relative motion of particles leads to a heterogeneous buildup in stress which
+will then back-react on the motion of the active particle, leading to a very
+similar coupling of motion and history, <span class="ltx_text" style="color:#000000;"> though presumably the tensorial
+nature of stress in higher dimensions will change the exact mapping onto the
+self-avoiding walk</span>.</p>
+</div>
+</section>
+</section>
+<section id="Sx4" class="ltx_section">
+<h2 class="ltx_title ltx_title_section">Numerical results</h2>
+
+<section id="Sx4.SSx1" class="ltx_subsection">
+<h3 class="ltx_title ltx_title_subsection">Elastic chain</h3>
+
+<figure id="Sx4.F1" class="ltx_figure"><img src="x1.png" id="Sx4.F1.g1" class="ltx_graphics ltx_img_landscape" width="389" height="296" alt="Refer to caption">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 1: </span>Scaling function for distribution, <math id="Sx4.F1.m5" class="ltx_Math" alttext="\nu_{1}(x)" display="inline"><mrow><msub><mi>ν</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math>, eq. (<a href="#Sx2.E6" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">6</span></a>)
+curve in red, compared to simulation data where we have saved the index of
+the final point of a trajectory, blue histogram. The distribution is a
+function of only <math id="Sx4.F1.m6" class="ltx_Math" alttext="|x|" display="inline"><mrow><mo stretchy="false">|</mo><mi>x</mi><mo stretchy="false">|</mo></mrow></math>, and is singular at <math id="Sx4.F1.m7" class="ltx_Math" alttext="x=0" display="inline"><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow></math>. The empirical distribution has a
+standard deviation of <math id="Sx4.F1.m8" class="ltx_Math" alttext="\sim 16,500" display="inline"><mrow><mi></mi><mo>∼</mo><mrow><mn>16</mn><mo>,</mo><mn>500</mn></mrow></mrow></math> sites. </figcaption>
+</figure>
+<div id="Sx4.SSx1.p1" class="ltx_para">
+<p class="ltx_p">We generate data for the simulation of an elastic chain of <math id="Sx4.SSx1.p1.m1" class="ltx_Math" alttext="N" display="inline"><mi>N</mi></math> particles linked
+by harmonic springs. We initialise the chain to its ground state.
+We then perform <math id="Sx4.SSx1.p1.m2" class="ltx_Math" alttext="m=134\times 10^{6}" display="inline"><mrow><mi>m</mi><mo>=</mo><mrow><mn>134</mn><mo lspace="0.222em" rspace="0.222em">×</mo><msup><mn>10</mn><mn>6</mn></msup></mrow></mrow></math> simulations
+starting at the origin, (<math id="Sx4.SSx1.p1.m3" class="ltx_Math" alttext="i=0" display="inline"><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow></math>) corresponding to <math id="Sx4.SSx1.p1.m4" class="ltx_Math" alttext="x=0" display="inline"><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow></math> in the figures. Our
+simulated systems are periodic, but all simulations are too short in time to be
+influenced by the choice of a finite <math id="Sx4.SSx1.p1.m5" class="ltx_Math" alttext="N" display="inline"><mi>N</mi></math>, or to see wrap-around of trajectories.
+As is usual in event-driven Monte Carlo we simulate for an imposed chain length
+which we take here as <math id="Sx4.SSx1.p1.m6" class="ltx_Math" alttext="t=10^{6}" display="inline"><mrow><mi>t</mi><mo>=</mo><msup><mn>10</mn><mn>6</mn></msup></mrow></math>. The mean-free path is slightly greater than unity, so
+this corresponds to very nearly <math id="Sx4.SSx1.p1.m7" class="ltx_Math" alttext="10^{6}" display="inline"><msup><mn>10</mn><mn>6</mn></msup></math> transfers of activity.</p>
+</div>
+<div id="Sx4.SSx1.p2" class="ltx_para">
+<p class="ltx_p">During each simulation, we cumulate
+the number of visits to each site by the active particle, <span class="ltx_text" style="color:#000000;"> in a manner analogous to eq (<a href="#Sx2.E1" title="In True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>) </span>
+which we again denote <math id="Sx4.SSx1.p2.m1" class="ltx_Math" alttext="L_{i}(t)" display="inline"><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></math>. At the end of
+each of the <math id="Sx4.SSx1.p2.m2" class="ltx_Math" alttext="m" display="inline"><mi>m</mi></math> simulations we save the index of the final active particle (which in the continuum
+limit corresponds to a displacement <math id="Sx4.SSx1.p2.m3" class="ltx_Math" alttext="x" display="inline"><mi>x</mi></math>), as
+well as the number of visits of the active particle to the final chain position
+<span class="ltx_text" style="color:#000000;"> corresponding to the variable
+<math id="Sx4.SSx1.p2.m4" class="ltx_Math" alttext="h" display="inline"><mi mathcolor="#000000">h</mi></math> of eq. (<a href="#Sx2.E7" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>)</span>. After the simulation, the data is binned generating empirical
+distributions, that we compare with eqs. (<a href="#Sx2.E6" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">6</span></a>, <a href="#Sx2.E7" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>), see
+Figs. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>, <a href="#Sx4.F2" title="Figure 2 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>. <span class="ltx_text" style="color:#000000;"> The red
+curves are the analytic results; blue shading corresponds to binned data from the Monte
+Carlo data. Fig. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a> corresponds to some 40,000 bins in the data,
+which give the appearance of a continuous curve.</span>
+The
+curves represent probability distributions and are thus automatically normalized
+to unit area. The only free variable in comparing the analytic expressions to
+the binned numerical data is the choice of the horizontal scale. We fix
+this one scale by imposing that the first moment of the empirical
+curve matches the theoretical expression.</p>
+</div>
+<figure id="Sx4.F2" class="ltx_figure"><img src="x2.png" id="Sx4.F2.g1" class="ltx_graphics ltx_img_landscape" width="540" height="417" alt="Refer to caption">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 2: </span>Scaling function for the number of site visits at the end-point of
+motion, <math id="Sx4.F2.m2" class="ltx_Math" alttext="\nu_{2}(h)" display="inline"><mrow><msub><mi>ν</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>h</mi><mo stretchy="false">)</mo></mrow></mrow></math> eq. (<a href="#Sx2.E7" title="In Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>) curve in red, compared to simulation
+data, blue histogram. Same simulation
+as Fig. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a></figcaption>
+</figure>
+<div id="Sx4.SSx1.p3" class="ltx_para">
+<p class="ltx_p">We
+find excellent agreement between theory and numerics. We note, in particular,
+that as predicted by theory the distribution of Fig. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a> has a singularity at
+the origin.
+The empirical curve, Fig. <a href="#Sx4.F2" title="Figure 2 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>, for
+<math id="Sx4.SSx1.p3.m1" class="ltx_Math" alttext="\rho_{2}" display="inline"><msub><mi>ρ</mi><mn>2</mn></msub></math> at <math id="Sx4.SSx1.p3.m2" class="ltx_Math" alttext="h=0" display="inline"><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow></math> is systematically lower than the red, theoretical curve, this
+corresponds to simulations that finish on an as-yet unvisited site. This empirical curve,
+thus converges weakly to the theory, with the bar at <math id="Sx4.SSx1.p3.m3" class="ltx_Math" alttext="h=0" display="inline"><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow></math> squeezed to zero
+width at the origin
+as <math id="Sx4.SSx1.p3.m4" class="ltx_Math" alttext="t" display="inline"><mi>t</mi></math> increases.
+We also performed simulations starting from a pre-equilibrated
+physical system. In this case, we find very similar distributions to those
+plotted in Figs. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>, <a href="#Sx4.F2" title="Figure 2 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a> with however, a change of scale in
+the axes, see also <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>]</cite>.</p>
+</div>
+</section>
+<section id="Sx4.SSx2" class="ltx_subsection">
+<h3 class="ltx_title ltx_title_subsection">Lifted TASEP</h3>
+
+<div id="Sx4.SSx2.p1" class="ltx_para">
+<p class="ltx_p">Finally, we perform a numerical study of the lifted TASEP model <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib9" title="Lifted TASEP: a Bethe ansatz integrable paradigm for non-reversible Markov chains" class="ltx_ref">9</a>]</cite>. We consider a system of <math id="Sx4.SSx2.p1.m1" class="ltx_Math" alttext="N" display="inline"><mi>N</mi></math> particles on a periodic
+lattice of length <math id="Sx4.SSx2.p1.m2" class="ltx_Math" alttext="2N" display="inline"><mrow><mn>2</mn><mo>⁢</mo><mi>N</mi></mrow></math>. <span class="ltx_text" style="color:#000000;"> This new variant on the TASEP is a model of
+impenetrable particle motion on a lattice, in which collisions cause transfers
+of velocity. The modification in the calculation of <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib9" title="Lifted TASEP: a Bethe ansatz integrable paradigm for non-reversible Markov chains" class="ltx_ref">9</a>]</cite> is
+the addition of a backward transfer of particle motion. For a special value of
+the backward transfer rate the lifted TASEP displays accelerated relaxation dynamics in
+density-density correlations in a manner which is similar to that displayed in
+continuum particle models<cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib8" title="Event-chain Monte Carlo with factor fields" class="ltx_ref">14</a>]</cite>. We study this TASEP model only at this
+specific value of the backward rate where the dynamics is highly accelerated.</span></p>
+</div>
+<div id="Sx4.SSx2.p2" class="ltx_para">
+<p class="ltx_p">We initialise the system in a crystal of equally spaced
+particles. Simulations on short times give rise to an asymmetric distribution
+from for <math id="Sx4.SSx2.p2.m1" class="ltx_Math" alttext="\rho_{1}(x)" display="inline"><mrow><msub><mi>ρ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math> (Fig. <a href="#Sx4.F3" title="Figure 3 ‣ Lifted TASEP ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">3</span></a>, top), but longer simulations give a
+very slow convergence to a more symmetric form (Fig. <a href="#Sx4.F3" title="Figure 3 ‣ Lifted TASEP ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">3</span></a>,
+bottom). We conclude that the lifted TASEP displays very similar phenomenology
+to the harmonic chain, and is also in the same dynamic universality class as
+true self-avoiding motion. We also confirmed, for lifted TASEP, the expected
+scaling of displacement of the activity in <math id="Sx4.SSx2.p2.m2" class="ltx_Math" alttext="t^{2/3}" display="inline"><msup><mi>t</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msup></math>,
+Fig. <a href="#Sx4.F4" title="Figure 4 ‣ Lifted TASEP ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a> (top). Fig. <a href="#Sx4.F4" title="Figure 4 ‣ Lifted TASEP ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a>, (bottom) shows that
+distribution of displacement is strongly skewed for short times; it is only after a
+long simulation that the back-forwards symmetry is established
+When we start with a configuration which is generated randomly, the initial asymmetry is weaker, though
+not zero.</p>
+</div>
+<figure id="Sx4.F3" class="ltx_figure"><img src="x3.png" id="Sx4.F3.g1" class="ltx_graphics ltx_img_portrait" width="540" height="751" alt="Refer to caption">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 3: </span>Distribution of displacements of the activity <math id="Sx4.F3.m5" class="ltx_Math" alttext="\rho_{1}(t,x)" display="inline"><mrow><msub><mi>ρ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math>, for lifted
+TASEP. Top, a short simulation of <math id="Sx4.F3.m6" class="ltx_Math" alttext="t=256" display="inline"><mrow><mi>t</mi><mo>=</mo><mn>256</mn></mrow></math> steps generates a skewed
+distribution. Bottom, a longer time scale of <math id="Sx4.F3.m7" class="ltx_Math" alttext="t=262,144" display="inline"><mrow><mi>t</mi><mo>=</mo><mrow><mn>262</mn><mo>,</mo><mn>144</mn></mrow></mrow></math> generates a
+distribution which is close to that found in Fig. <a href="#Sx4.F1" title="Figure 1 ‣ Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>, while still
+displaying a very slight left-right asymmetry. Scaled curve of <math id="Sx4.F3.m8" class="ltx_Math" alttext="\nu_{1}(x)" display="inline"><mrow><msub><mi>ν</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math>
+red/dashed.</figcaption>
+</figure>
+<figure id="Sx4.F4" class="ltx_figure"><img src="x4.png" id="Sx4.F4.g1" class="ltx_graphics ltx_img_landscape" width="540" height="407" alt="Refer to caption">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_figure">Figure 4: </span>Evolution of moments of <math id="Sx4.F4.m4" class="ltx_Math" alttext="\rho_{1}(t,x)" display="inline"><mrow><msub><mi>ρ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></math> for lifted TASEP. Top: standard
+deviation of the distribution, compared to evolution in <math id="Sx4.F4.m5" class="ltx_Math" alttext="t^{2/3}" display="inline"><msup><mi>t</mi><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></msup></math>. Bottom,
+skewness (normalized third moment) compared to <math id="Sx4.F4.m6" class="ltx_Math" alttext="t^{-1/3}" display="inline"><msup><mi>t</mi><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>3</mn></mrow></mrow></msup></math>. The decrease in
+skewness corresponds to a distribution which progressively becomes more
+symmetric.</figcaption>
+</figure>
+</section>
+</section>
+<section id="Sx5" class="ltx_section">
+<h2 class="ltx_title ltx_title_section">Conclusions</h2>
+
+<div id="Sx5.p1" class="ltx_para">
+<p class="ltx_p">To conclude, we have presented <span class="ltx_text" style="color:#000000;"> numerical evidence</span> that the evolution of a system
+subject to non-reversible Monte Carlo is directly linked to the continuum limit
+of a growth model <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib14" title="Asymptotic behavior of the ”true” self-avoiding walk" class="ltx_ref">1</a>]</cite>. We performed extensive simulations using an event
+chain algorithm and compared the resulting distributions to those calculated
+in <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib20" title="The ”True” Self-Avoiding Walk with Bond Repulsion on ⁢\mathbbZ: Limit Theorems" class="ltx_ref">23</a>, <a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>, <a href="#bib.bib21" title="Self-interacting random motions" class="ltx_ref">24</a>]</cite>. We find excellent agreement, for both a harmonic
+chain, and for the non-harmonic lifted TASEP, and so conclude that the
+non-reversible algorithm is indeed a realisation of a true self-repelling
+motion. <span class="ltx_text" style="color:#000000;"> We have shown that several <span class="ltx_text ltx_font_slanted">very different</span> physical systems are
+members of the same dynamic universality class. It would be of great
+interest to understand why this is the case, and whether other
+systems display the same scaling behavior. As noted by <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib3" title="Marginal densities of the “true” self-repelling motion" class="ltx_ref">8</a>]</cite> this
+universality class is distinct from KPZ (Kardar-Parisi-Zhang), even though
+similar special functions appear in the solutions</span>.</p>
+</div>
+<div id="Sx5.p2" class="ltx_para">
+<p class="ltx_p">Event-chain methods, including factor fields, have been generalized to higher
+dimensions <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib10" title="Large-scale dynamics of event-chain Monte Carlo" class="ltx_ref">16</a>]</cite>. It would be of interest to transfer the formalism
+of the present letter to such systems, perhaps using the approach of <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib22" title="Diffusion and superdiffusion in lattice models for colliding particles with stored momentum" class="ltx_ref">5</a>]</cite>. Applications in
+Monte Carlo simulation also require generalisations of the continuum
+equations to include extra, drift, terms due to coupling to external stresses <cite class="ltx_cite ltx_citemacro_cite">[<a href="#bib.bib7" title="Generalized event-chain Monte Carlo: Constructing rejection-free global-balance algorithms from infinitesimal steps" class="ltx_ref">17</a>]</cite>.</p>
+</div>
+<div id="Sx5.p3" class="ltx_para">
+<p class="ltx_p">The code used to simulate the two physical systems, as well as the plotting and analysis code
+is available from <span class="ltx_text" style="color:#000000;"> <a href="https://github.com/acmaggs/Avoid" title="" class="ltx_ref ltx_url ltx_font_typewriter">https://github.com/acmaggs/Avoid</a></span>.</p>
+</div>
+<div class="ltx_acknowledgements">The author would like to thank Werner Krauth for extensive discussions on
+the subject of non-reversible simulation and lattice models.  
+</div>
+</section>
+<section id="Sx6" class="ltx_section">
+<h2 class="ltx_title ltx_title_section">References</h2>
+
+</section>
+<section id="bib" class="ltx_bibliography">
+<h2 class="ltx_title ltx_title_bibliography">References</h2>
+
+<ul id="bib.L1" class="ltx_biblist">
+<li id="bib.bib14" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[1]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">D. J. Amit, G. Parisi, and L. Peliti</span><span class="ltx_text ltx_bib_year"> (1983-02)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Asymptotic behavior of the ”true” self-avoiding walk</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. B</span> <span class="ltx_text ltx_bib_volume">27</span>, <span class="ltx_text ltx_bib_pages"> pp. 1635–1645</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevB.27.1635" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevB.27.1635" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx2.SSx1.p1" title="Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Distributions functions of the model</span></a>,
+<a href="#Sx2.p1" title="True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">True self-avoiding motion</span></a>,
+<a href="#Sx2.p2" title="True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">True self-avoiding motion</span></a>,
+<a href="#Sx5.p1" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+<li id="bib.bib6" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[2]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">E. P. Bernard, W. Krauth, and D. B. Wilson</span><span class="ltx_text ltx_bib_year"> (2009-11)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Event-chain Monte Carlo algorithms for hard-sphere systems</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. E</span> <span class="ltx_text ltx_bib_volume">80</span>, <span class="ltx_text ltx_bib_pages"> pp. 056704</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevE.80.056704" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevE.80.056704" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p1" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>.
+</span>
+</li>
+<li id="bib.bib25" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[3]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">E. P. Bernard and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2011-10)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Two-step melting in two dimensions: first-order liquid-hexatic transition</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. Lett.</span> <span class="ltx_text ltx_bib_volume">107</span>, <span class="ltx_text ltx_bib_pages"> pp. 155704</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevLett.107.155704" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevLett.107.155704" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p1" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>.
+</span>
+</li>
+<li id="bib.bib4" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[4]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">J. Bernasconi and L. Pietronero</span><span class="ltx_text ltx_bib_year"> (1984-05)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">”True” self-avoiding walk in one dimension</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. B</span> <span class="ltx_text ltx_bib_volume">29</span>, <span class="ltx_text ltx_bib_pages"> pp. 5196–5198</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevB.29.5196" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevB.29.5196" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>.
+</span>
+</li>
+<li id="bib.bib22" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[5]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">E. Crane, S. Ledger, and B. Tóth</span><span class="ltx_text ltx_bib_year"> (2019/12/01)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Diffusion and superdiffusion in lattice models for colliding particles with stored momentum</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Journal of Statistical Physics</span> <span class="ltx_text ltx_bib_volume">177</span> (<span class="ltx_text ltx_bib_number">6</span>), <span class="ltx_text ltx_bib_pages"> pp. 1240–1262</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1007/s10955-019-02419-9" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<span class="ltx_text isbn ltx_bib_external">ISBN 1572-9613</span>,
+<a href="https://doi.org/10.1007/s10955-019-02419-9" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx5.p2" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+<li id="bib.bib18" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[6]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">B. Derrida</span><span class="ltx_text ltx_bib_year"> (1998)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">An exactly soluble non-equilibrium system: the asymmetric simple exclusion process</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Physics Reports</span> <span class="ltx_text ltx_bib_volume">301</span> (<span class="ltx_text ltx_bib_number">1</span>), <span class="ltx_text ltx_bib_pages"> pp. 65–83</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text issn ltx_bib_external">ISSN 0370-1573</span>,
+<a href="https://dx.doi.org/https%3A//doi.org/10.1016/S0370-1573%2898%2900006-4" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://www.sciencedirect.com/science/article/pii/S0370157398000064" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx3.p4" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>.
+</span>
+</li>
+<li id="bib.bib16" class="ltx_bibitem ltx_bib_misc">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[7]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title"><span class="ltx_text ltx_font_italic">NIST Digital Library of Mathematical Functions</span></span>.
+</span>
+<span class="ltx_bibblock">Note: <span class="ltx_text ltx_bib_note"><span class="ltx_ref ltx_nolink ltx_url ltx_font_typewriter ltx_ref_self">https://dlmf.nist.gov/</span>, Release 1.1.11 of 2023-09-15F. W. J. Olver, A. B. Olde Daalhuis, D. W. Lozier, B. I. Schneider,
+R. F. Boisvert, C. W. Clark, B. R. Miller, B. V. Saunders,
+H. S. Cohl, and M. A. McClain, eds.</span>
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dlmf.nist.gov/" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx2.SSx1.p1" title="Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Distributions functions of the model</span></a>.
+</span>
+</li>
+<li id="bib.bib3" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[8]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">L. Dumaz and B. Tóth</span><span class="ltx_text ltx_bib_year"> (2013)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Marginal densities of the “true” self-repelling motion</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Stochastic Processes and their Applications</span> <span class="ltx_text ltx_bib_volume">123</span> (<span class="ltx_text ltx_bib_number">4</span>), <span class="ltx_text ltx_bib_pages"> pp. 1454–1471</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text issn ltx_bib_external">ISSN 0304-4149</span>,
+<a href="https://dx.doi.org/https%3A//doi.org/10.1016/j.spa.2012.11.011" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://www.sciencedirect.com/science/article/pii/S0304414912002517" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx2.SSx1.p1" title="Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Distributions functions of the model</span></a>,
+<a href="#Sx4.SSx1.p3" title="Elastic chain ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Elastic chain</span></a>,
+<a href="#Sx5.p1" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+<li id="bib.bib9" class="ltx_bibitem ltx_bib_misc">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[9]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">F. H. L. Essler and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2023)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Lifted TASEP: a Bethe ansatz integrable paradigm for non-reversible Markov chains</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text ltx_bib_external">2306.13059</span></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx3.p4" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>,
+<a href="#Sx4.SSx2.p1" title="Lifted TASEP ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Lifted TASEP</span></a>.
+</span>
+</li>
+<li id="bib.bib12" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[10]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">M. F. Faulkner, L. Qin, A. C. Maggs, and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2018-08)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">All-atom computations with irreversible Markov chains</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">The Journal of Chemical Physics</span> <span class="ltx_text ltx_bib_volume">149</span> (<span class="ltx_text ltx_bib_number">6</span>), <span class="ltx_text ltx_bib_pages"> pp. 064113</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text issn ltx_bib_external">ISSN 0021-9606</span>,
+<a href="https://dx.doi.org/10.1063/1.5036638" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://doi.org/10.1063/1.5036638" title="" class="ltx_ref ltx_bib_external">Link</a>,
+<span class="ltx_text ltx_bib_external">https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.5036638/13501056/064113_1_online.pdf</span></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p1" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx3.p1" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>.
+</span>
+</li>
+<li id="bib.bib13" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[11]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">J. Harland, M. Michel, T. A. Kampmann, and J. Kierfeld</span><span class="ltx_text ltx_bib_year"> (2017-03)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Event-chain Monte Carlo algorithms for three- and many-particle interactions</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Europhysics Letters</span> <span class="ltx_text ltx_bib_volume">117</span> (<span class="ltx_text ltx_bib_number">3</span>), <span class="ltx_text ltx_bib_pages"> pp. 30001</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1209/0295-5075/117/30001" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://dx.doi.org/10.1209/0295-5075/117/30001" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p1" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>.
+</span>
+</li>
+<li id="bib.bib24" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[12]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">S. C. Kapfer and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2015-01)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Two-dimensional melting: from liquid-hexatic coexistence to continuous transitions</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. Lett.</span> <span class="ltx_text ltx_bib_volume">114</span>, <span class="ltx_text ltx_bib_pages"> pp. 035702</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevLett.114.035702" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevLett.114.035702" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p1" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>.
+</span>
+</li>
+<li id="bib.bib17" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[13]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">S. C. Kapfer and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2017-12)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Irreversible local Markov chains with rapid convergence towards equilibrium</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. Lett.</span> <span class="ltx_text ltx_bib_volume">119</span>, <span class="ltx_text ltx_bib_pages"> pp. 240603</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevLett.119.240603" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevLett.119.240603" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx3.p1" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>.
+</span>
+</li>
+<li id="bib.bib8" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[14]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">Z. Lei, W. Krauth, and A. C. Maggs</span><span class="ltx_text ltx_bib_year"> (2019-04)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Event-chain Monte Carlo with factor fields</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. E</span> <span class="ltx_text ltx_bib_volume">99</span>, <span class="ltx_text ltx_bib_pages"> pp. 043301</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevE.99.043301" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevE.99.043301" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx3.p3" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>,
+<a href="#Sx3.p4" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>,
+<a href="#Sx4.SSx2.p1" title="Lifted TASEP ‣ Numerical results ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Lifted TASEP</span></a>.
+</span>
+</li>
+<li id="bib.bib11" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[15]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">Z. Lei and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2018-03)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Irreversible Markov chains in spin models: topological excitations</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Europhysics Letters</span> <span class="ltx_text ltx_bib_volume">121</span> (<span class="ltx_text ltx_bib_number">1</span>), <span class="ltx_text ltx_bib_pages"> pp. 10008</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1209/0295-5075/121/10008" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://dx.doi.org/10.1209/0295-5075/121/10008" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx3.p3" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>.
+</span>
+</li>
+<li id="bib.bib10" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[16]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">A. C. Maggs and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2022-01)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Large-scale dynamics of event-chain Monte Carlo</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Physical Review E</span> <span class="ltx_text ltx_bib_volume">105</span> (<span class="ltx_text ltx_bib_number">1</span>).
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/physreve.105.015309" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://doi.org/10.1103%2Fphysreve.105.015309" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx5.p2" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+<li id="bib.bib7" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[17]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">M. Michel, S. C. Kapfer, and W. Krauth</span><span class="ltx_text ltx_bib_year"> (2014-02)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Generalized event-chain Monte Carlo: Constructing rejection-free global-balance algorithms from infinitesimal steps</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">The Journal of Chemical Physics</span> <span class="ltx_text ltx_bib_volume">140</span> (<span class="ltx_text ltx_bib_number">5</span>), <span class="ltx_text ltx_bib_pages"> pp. 054116</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text issn ltx_bib_external">ISSN 0021-9606</span>,
+<a href="https://dx.doi.org/10.1063/1.4863991" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://doi.org/10.1063/1.4863991" title="" class="ltx_ref ltx_bib_external">Link</a>,
+<span class="ltx_text ltx_bib_external">https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.4863991/15472076/054116_1_online.pdf</span></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p1" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx3.p1" title="Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Event-Chain Monte Carlo</span></a>,
+<a href="#Sx5.p2" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+<li id="bib.bib1" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[18]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">S. P. Obukhov and L. Peliti</span><span class="ltx_text ltx_bib_year"> (1983-04)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Renormalisation of the ’true’ self-avoiding walk</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Journal of Physics A: Mathematical and General</span> <span class="ltx_text ltx_bib_volume">16</span> (<span class="ltx_text ltx_bib_number">5</span>), <span class="ltx_text ltx_bib_pages"> pp. L147</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1088/0305-4470/16/5/004" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://dx.doi.org/10.1088/0305-4470/16/5/004" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx2.p2" title="True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">True self-avoiding motion</span></a>.
+</span>
+</li>
+<li id="bib.bib19" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[19]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">R. Peierls</span><span class="ltx_text ltx_bib_year"> (1935)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Quelques propriétés typiques des corps solides</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Annales de l’institut Henri Poincaré</span> <span class="ltx_text ltx_bib_volume">5</span> (<span class="ltx_text ltx_bib_number">3</span>), <span class="ltx_text ltx_bib_pages"> pp. 177–222</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="http://www.numdam.org/item/AIHP_1935__5_3_177_0/" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx3.SSx1.p1" title="Argument for algorithmic optimality ‣ Event-Chain Monte Carlo ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Argument for algorithmic optimality</span></a>.
+</span>
+</li>
+<li id="bib.bib23" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[20]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">L. Peliti</span><span class="ltx_text ltx_bib_year"> (1984)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Self-avoiding walks</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Physics Reports</span> <span class="ltx_text ltx_bib_volume">103</span> (<span class="ltx_text ltx_bib_number">1</span>), <span class="ltx_text ltx_bib_pages"> pp. 225–231</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text issn ltx_bib_external">ISSN 0370-1573</span>,
+<a href="https://dx.doi.org/https%3A//doi.org/10.1016/0370-1573%2884%2990084-X" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://www.sciencedirect.com/science/article/pii/037015738490084X" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx2.p2" title="True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">True self-avoiding motion</span></a>.
+</span>
+</li>
+<li id="bib.bib5" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[21]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">L. Pietronero</span><span class="ltx_text ltx_bib_year"> (1983-05)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Critical dimensionality and exponent of the ”true” self-avoiding walk</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Phys. Rev. B</span> <span class="ltx_text ltx_bib_volume">27</span>, <span class="ltx_text ltx_bib_pages"> pp. 5887–5889</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1103/PhysRevB.27.5887" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://link.aps.org/doi/10.1103/PhysRevB.27.5887" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx2.SSx2.p1" title="Scaling argument for motion ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Scaling argument for motion</span></a>.
+</span>
+</li>
+<li id="bib.bib2" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[22]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">B. Tóth and W. Werner</span><span class="ltx_text ltx_bib_year"> (1998/07/01)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">The true self-repelling motion</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">Probability Theory and Related Fields</span> <span class="ltx_text ltx_bib_volume">111</span> (<span class="ltx_text ltx_bib_number">3</span>), <span class="ltx_text ltx_bib_pages"> pp. 375–452</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1007/s004400050172" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<span class="ltx_text isbn ltx_bib_external">ISBN 1432-2064</span>,
+<a href="https://doi.org/10.1007/s004400050172" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>.
+</span>
+</li>
+<li id="bib.bib20" class="ltx_bibitem ltx_bib_article">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[23]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">B. Tóth</span><span class="ltx_text ltx_bib_year"> (1995)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">The ”True” Self-Avoiding Walk with Bond Repulsion on <math id="bib.bib20.m1a" class="ltx_Math" alttext="\mathbb{Z}" display="inline"><mrow><merror class="ltx_ERROR undefined undefined"><mtext>\mathbb</mtext></merror><mo>⁢</mo><mi>Z</mi></mrow></math>: Limit Theorems</span>.
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_journal">The Annals of Probability</span> <span class="ltx_text ltx_bib_volume">23</span> (<span class="ltx_text ltx_bib_number">4</span>), <span class="ltx_text ltx_bib_pages"> pp. 1523 – 1556</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><a href="https://dx.doi.org/10.1214/aop/1176987793" title="" class="ltx_ref doi ltx_bib_external">Document</a>,
+<a href="https://doi.org/10.1214/aop/1176987793" title="" class="ltx_ref ltx_bib_external">Link</a></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx1.p2" title="Introduction ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Introduction</span></a>,
+<a href="#Sx2.SSx1.p1" title="Distributions functions of the model ‣ True self-avoiding motion ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Distributions functions of the model</span></a>,
+<a href="#Sx5.p1" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+<li id="bib.bib21" class="ltx_bibitem ltx_bib_inproceedings">
+<span class="ltx_tag ltx_bib_key ltx_role_refnum ltx_tag_bibitem">[24]</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_author">B. Tóth</span><span class="ltx_text ltx_bib_year"> (2001)</span>
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_title">Self-interacting random motions</span>.
+</span>
+<span class="ltx_bibblock">In <span class="ltx_text ltx_bib_inbook">European Congress of Mathematics</span>,  <span class="ltx_text ltx_bib_editor">C. Casacuberta, R. M. Miró-Roig, J. Verdera, and S. Xambó-Descamps (Eds.)</span>,
+</span>
+<span class="ltx_bibblock"><span class="ltx_text ltx_bib_place">Basel</span>, <span class="ltx_text ltx_bib_pages"> pp. 555–564</span>.
+</span>
+<span class="ltx_bibblock">External Links: <span class="ltx_text ltx_bib_links"><span class="ltx_text isbn ltx_bib_external">ISBN 978-3-0348-8268-2</span></span>
+</span>
+<span class="ltx_bibblock ltx_bib_cited">Cited by: <a href="#Sx5.p1" title="Conclusions ‣ Non-reversible Monte Carlo: an example of “true” self-repelling motion" class="ltx_ref"><span class="ltx_text ltx_ref_title">Conclusions</span></a>.
+</span>
+</li>
+</ul>
+</section>
+</article>
+</div>
+<footer class="ltx_page_footer">
+<div class="ltx_page_logo">Generated  on Tue Jun 25 13:43:59 2024 by <a href="http://dlmf.nist.gov/LaTeXML/" class="ltx_LaTeXML_logo"><span style="letter-spacing:-0.2em; margin-right:0.1em;">L<span class="ltx_font_smallcaps" style="position:relative; bottom:2.2pt;">a</span>T<span class="ltx_font_smallcaps" style="font-size:120%;position:relative; bottom:-0.2ex;">e</span></span><span style="font-size:90%; position:relative; bottom:-0.2ex;">XML</span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKExQZLWTEaOUAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAdpJREFUKM9tkL+L2nAARz9fPZNCKFapUn8kyI0e4iRHSR1Kb8ng0lJw6FYHFwv2LwhOpcWxTjeUunYqOmqd6hEoRDhtDWdA8ApRYsSUCDHNt5ul13vz4w0vWCgUnnEc975arX6ORqN3VqtVZbfbTQC4uEHANM3jSqXymFI6yWazP2KxWAXAL9zCUa1Wy2tXVxheKA9YNoR8Pt+aTqe4FVVVvz05O6MBhqUIBGk8Hn8HAOVy+T+XLJfLS4ZhTiRJgqIoVBRFIoric47jPnmeB1mW/9rr9ZpSSn3Lsmir1fJZlqWlUonKsvwWwD8ymc/nXwVBeLjf7xEKhdBut9Hr9WgmkyGEkJwsy5eHG5vN5g0AKIoCAEgkEkin0wQAfN9/cXPdheu6P33fBwB4ngcAcByHJpPJl+fn54mD3Gg0NrquXxeLRQAAwzAYj8cwTZPwPH9/sVg8PXweDAauqqr2cDjEer1GJBLBZDJBs9mE4zjwfZ85lAGg2+06hmGgXq+j3+/DsixYlgVN03a9Xu8jgCNCyIegIAgx13Vfd7vdu+FweG8YRkjXdWy329+dTgeSJD3ieZ7RNO0VAXAPwDEAO5VKndi2fWrb9jWl9Esul6PZbDY9Go1OZ7PZ9z/lyuD3OozU2wAAAABJRU5ErkJggg==" alt="Mascot Sammy"></a>
+</div></footer>
+</div>
+</body>
+</html>
