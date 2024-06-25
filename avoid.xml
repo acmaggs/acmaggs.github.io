@@ -1,0 +1,3276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?latexml searchpaths="/Users/tony2/github/Ludwik/avoid/latex"?>
+<?latexml class="iopart" options="10pt"?>
+<?latexml package="hyperref"?>
+<?latexml package="color"?>
+<?latexml package="ulem" options="normalem"?>
+<?latexml package="xcolor"?>
+<!--  %“usepackage–tgschola,fouriernc˝ --><!--  %“usepackage–tgschola˝ --><!--  %“usepackage–lmodern˝ --><?latexml package="graphicx"?>
+<?latexml package="xspace"?>
+<?latexml RelaxNGSchema="LaTeXML"?>
+<document xmlns="http://dlmf.nist.gov/LaTeXML">
+  <resource src="LaTeXML.css" type="text/css"/>
+  <resource src="ltx-article.css" type="text/css"/>
+  <resource src="ltx-ulem.css" type="text/css"/>
+  <title><!--  %**** avoid.tex Line 25 **** -->Non-reversible Monte Carlo: an example of “true”
+self-repelling motion</title>
+  <creator role="author">
+    <personname>A. C. Maggs</personname>
+    <contact role="email">anthony.maggs@espci.fr</contact>
+    <contact role="address">CNRS UMR 7083, ESPCI Paris, Université PSL, 10 rue Vauquelin, 75005 Paris, France.</contact>
+  </creator>
+  <abstract name="Abstract">
+<!--  %“institute–CNRS UMR7083, ESPCI Paris, Université PSL, 10 rue Vauquelin, 75005 
+     %Paris, France.˝ %epl 
+     %“abstract %epl -->    <p>We link the large-scale dynamics of non-reversible Monte Carlo
+algorithms as well as a lifted TASEP to an exactly soluble model of
+self-repelling motion. We present arguments for the connection between the
+problems and perform simulations, where we show that the empirical
+distribution functions generated from Monte Carlo are well described by the
+analytic solution of self-repelling motion.</p>
+  </abstract>
+<!--  %“email–anthony.maggs@espci.fr˝ % aps 
+     %iopart 
+     %“affiliation–CNRS UMR 7083, ESPCI Paris, Université PSL, 10 rue Vauquelin,  75005 Paris, France.˝ %aps 
+     %iopart 
+     %“maketitle %aps 
+     %“ioptwocol -->  <section xml:id="Sx1">
+    <title>Introduction</title>
+    <para xml:id="Sx1.p1">
+      <p>Non-reversible Monte Carlo sampling as developed for hard disks <cite class="ltx_citemacro_cite">[<bibref bibrefs="Wilson" separator="," yyseparator=","/>]</cite>,
+and its generalisation to arbitrary potentials <cite class="ltx_citemacro_cite">[<bibref bibrefs="Manon,Harland_2017,Faulkner" separator="," yyseparator=","/>]</cite> has many wonderful properties which facilitate the equilibration of
+large complex systems faster than conventional Monte Carlo, or molecular
+dynamics algorithms <cite class="ltx_citemacro_cite">[<bibref bibrefs="hexatic,hexatic2" separator="," yyseparator=","/>]</cite>. <text color="#000000"> Such Monte Carlo methods
+do not implement the historic choice of detailed balance, rather the
+weaker condition of global
+balance. This leads to much greater freedom of choice for the implementer of algorithms.</text>
+However, analytic understanding of the large-scale,
+effective dynamics is lacking. This is in strong contrast to, for instance,
+molecular dynamics which generate the Navier-Stokes equations at large
+scales in a fluid. Extensive theoretical analysis of the mode structure of these
+hydrodynamic equations gives us the slow hydrodynamic modes of
+sound, vorticity and heat propagation, which limit the large-scale sampling of a
+fluid.</p>
+    </para>
+    <para xml:id="Sx1.p2">
+      <p><!--  %**** avoid.tex Line 75 **** -->What are the equivalent statements for event-chain Monte Carlo? What are the
+slow, hydrodynamic modes? This letter aims to present the continuum,
+coarse-grained equations describing event-chain simulation and demonstrate their
+equivalence to an exactly soluble model of a growing polymer. Clearly, if one
+understands the temporal evolution of the coarse-grained equations, it will be
+possible to make exact statements on the evolution of densities and
+correlations, and perhaps find better implementations in the future. The present
+letter makes a direct link between event-chain Monte Carlo simulation and “true” self-repelling motion, <cite class="ltx_citemacro_cite">[<bibref bibrefs="Amit" separator="," yyseparator=","/>]</cite> which
+has been much studied using a variety of physical methods including
+scaling <cite class="ltx_citemacro_cite">[<bibref bibrefs="Bernasconi,Pietronero" separator="," yyseparator=","/>]</cite> and renormalisation <cite class="ltx_citemacro_cite">[<bibref bibrefs="Obukhov_1983" separator="," yyseparator=","/>]</cite>.
+Recently this model has been studied using advanced methods based on interacting
+Brownian paths, which have led to exact, analytic results for the dynamical
+properties <cite class="ltx_citemacro_cite">[<bibref bibrefs="Wendelin,Toth,DUMAZ20131454" separator="," yyseparator=","/>]</cite>.</p>
+    </para>
+    <para xml:id="Sx1.p3">
+      <p>In this letter, we introduce the self-avoiding model, together with the exact
+results for its time evolution. We then summarise the behaviour of a class of
+non-reversible algorithms before arguing that there is a link
+between these two dynamical systems. Finally, we present numerical evidence as
+to the identity of distribution functions with data coming from event-chain
+simulation of harmonic chains, as well as simulation of a lifted TASEP (Totally
+Asymmetric Simple Exclusion Process).</p>
+    </para>
+  </section>
+  <section xml:id="Sx2">
+    <title>True self-avoiding motion</title>
+    <para xml:id="Sx2.p1">
+      <p>The “true” self-avoiding walk was introduced, <cite class="ltx_citemacro_cite">[<bibref bibrefs="Amit" separator="," yyseparator=","/>]</cite> as a
+dynamic model of polymer growth, in contrast to an equilibrated statistical
+ensemble of equilibrated polymers. On a lattice, monomers are added successively
+to a chain, trying to avoid places where the polymer has already passed. The
+probability of choosing a site <Math mode="inline" tex="i" text="i" xml:id="Sx2.p1.m1">
+          <XMath>
+            <XMTok font="italic" role="UNKNOWN">i</XMTok>
+          </XMath>
+        </Math>, which has been visited <Math mode="inline" tex="L_{i}(t)" text="L _ i * t" xml:id="Sx2.p1.m2">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+              <XMApp>
+                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                <XMTok font="italic" fontsize="70%" role="UNKNOWN">i</XMTok>
+              </XMApp>
+              <XMDual>
+                <XMRef idref="Sx2.p1.m2.1"/>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">(</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.p1.m2.1">t</XMTok>
+                  <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMApp>
+          </XMath>
+        </Math><!--  %**** avoid.tex Line 100 **** --> times is
+then</p>
+      <equation labels="LABEL:eq:disc" xml:id="Sx2.E1">
+        <tags>
+          <tag>(1)</tag>
+          <tag role="autoref">Equation 1</tag>
+          <tag role="refnum">1</tag>
+        </tags>
+        <Math mode="display" tex="p_{i}(t+1)=\frac{e^{-\lambda L_{i}(t)}}{\sum_{j}e^{-\lambda L_{j}(t)}}" text="p _ i * (t + 1) = e ^ (- lambda * L _ i * t) / (sum _ j)@(e ^ (- lambda * L _ j * t))" xml:id="Sx2.E1.m1">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="equals" role="RELOP">=</XMTok>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">p</XMTok>
+                  <XMTok font="italic" fontsize="70%" role="UNKNOWN">i</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx2.E1.m1.3"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMApp xml:id="Sx2.E1.m1.3">
+                      <XMTok meaning="plus" role="ADDOP">+</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                      <XMTok meaning="1" role="NUMBER">1</XMTok>
+                    </XMApp>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+              <XMApp>
+                <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                  <XMTok font="italic" role="UNKNOWN">e</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok font="italic" fontsize="70%" name="lambda" role="UNKNOWN">λ</XMTok>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post3"/>
+                        <XMTok font="italic" fontsize="70%" role="UNKNOWN">L</XMTok>
+                        <XMTok font="italic" fontsize="50%" role="UNKNOWN">i</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMRef idref="Sx2.E1.m1.1"/>
+                        <XMWrap>
+                          <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" fontsize="70%" role="UNKNOWN" xml:id="Sx2.E1.m1.1">t</XMTok>
+                          <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                  </XMApp>
+                </XMApp>
+                <XMApp>
+                  <XMApp>
+                    <XMTok role="SUBSCRIPTOP" scriptpos="post2"/>
+                    <XMTok mathstyle="text" meaning="sum" role="SUMOP" scriptpos="post">∑</XMTok>
+                    <XMTok font="italic" fontsize="70%" role="UNKNOWN">j</XMTok>
+                  </XMApp>
+                  <XMApp>
+                    <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                    <XMTok font="italic" role="UNKNOWN">e</XMTok>
+                    <XMApp>
+                      <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                      <XMApp>
+                        <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                        <XMTok font="italic" fontsize="70%" name="lambda" role="UNKNOWN">λ</XMTok>
+                        <XMApp>
+                          <XMTok role="SUBSCRIPTOP" scriptpos="post3"/>
+                          <XMTok font="italic" fontsize="70%" role="UNKNOWN">L</XMTok>
+                          <XMTok font="italic" fontsize="50%" role="UNKNOWN">j</XMTok>
+                        </XMApp>
+                        <XMDual>
+                          <XMRef idref="Sx2.E1.m1.2"/>
+                          <XMWrap>
+                            <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                            <XMTok font="italic" fontsize="70%" role="UNKNOWN" xml:id="Sx2.E1.m1.2">t</XMTok>
+                            <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                          </XMWrap>
+                        </XMDual>
+                      </XMApp>
+                    </XMApp>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMApp>
+          </XMath>
+        </Math>
+      </equation>
+      <p>Where the sum is over all neighbours <Math mode="inline" tex="j" text="j" xml:id="Sx2.p1.m3">
+          <XMath>
+            <XMTok font="italic" role="UNKNOWN">j</XMTok>
+          </XMath>
+        </Math> of the current position at time
+<Math mode="inline" tex="t" text="t" xml:id="Sx2.p1.m4">
+          <XMath>
+            <XMTok font="italic" role="UNKNOWN">t</XMTok>
+          </XMath>
+        </Math>. <text color="#000000"> <Math mode="inline" tex="\lambda&gt;0" text="lambda &gt; 0" xml:id="Sx2.p1.m5">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="greater-than" role="RELOP">&gt;</XMTok>
+                <XMTok font="italic" name="lambda" role="UNKNOWN">λ</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> measures the strength of the repelling interaction.</text>
+The model has infinite memory, required to calculate the placement probabilities
+of the new monomer. <text color="#000000"> The large-scale behaviour of the process is believed to be
+independent of <Math mode="inline" tex="\lambda" text="lambda" xml:id="Sx2.p1.m6">
+            <XMath>
+              <XMTok font="italic" name="lambda" role="UNKNOWN">λ</XMTok>
+            </XMath>
+          </Math> for finite values of the parameter.</text></p>
+    </para>
+    <para xml:id="Sx2.p2">
+      <p>It was argued, <cite class="ltx_citemacro_cite">[<bibref bibrefs="Amit" separator="," yyseparator=","/>]</cite> that this dynamic process has a continuum limit so
+that the effective, large-scale behaviour is of the form</p>
+      <equationgroup class="ltx_eqn_eqnarray" xml:id="Sx6.EGx1">
+        <equation labels="LABEL:eq:motion" xml:id="Sx2.E2">
+          <tags>
+            <tag>(2)</tag>
+            <tag role="autoref">Equation 2</tag>
+            <tag role="refnum">2</tag>
+          </tags>
+          <MathFork>
+            <Math tex="\displaystyle\frac{d{\textbf{X}(t)}}{dt}=-\nabla L(t,{\textbf{X}}(t))+\xi(t)" text="(d * [X] * t) / (d * t) = (- nabla@(L) * open-interval@(t, [X] * t)) + xi * t" xml:id="Sx2.E2.m4">
+              <XMath>
+                <XMApp>
+                  <XMTok meaning="equals" role="RELOP">=</XMTok>
+                  <XMApp>
+                    <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                      <XMText><text font="bold">X</text></XMText>
+                      <XMDual>
+                        <XMRef idref="Sx2.E2.m4.1"/>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m4.1">t</XMTok>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                    </XMApp>
+                  </XMApp>
+                  <XMApp>
+                    <XMTok meaning="plus" role="ADDOP">+</XMTok>
+                    <XMApp>
+                      <XMTok meaning="minus" role="ADDOP">-</XMTok>
+                      <XMApp>
+                        <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                        <XMApp>
+                          <XMTok name="nabla" role="OPERATOR">∇</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                        </XMApp>
+                        <XMDual>
+                          <XMApp>
+                            <XMTok meaning="open-interval"/>
+                            <XMRef idref="Sx2.E2.m4.3"/>
+                            <XMRef idref="Sx2.E2.m4.5"/>
+                          </XMApp>
+                          <XMWrap>
+                            <XMTok role="OPEN" stretchy="false">(</XMTok>
+                            <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m4.3">t</XMTok>
+                            <XMTok role="PUNCT">,</XMTok>
+                            <XMApp xml:id="Sx2.E2.m4.5">
+                              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                              <XMText><text font="bold">X</text></XMText>
+                              <XMDual>
+                                <XMRef idref="Sx2.E2.m4.2"/>
+                                <XMWrap>
+                                  <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m4.2">t</XMTok>
+                                  <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                                </XMWrap>
+                              </XMDual>
+                            </XMApp>
+                            <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                          </XMWrap>
+                        </XMDual>
+                      </XMApp>
+                    </XMApp>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok font="italic" name="xi" role="UNKNOWN">ξ</XMTok>
+                      <XMDual>
+                        <XMRef idref="Sx2.E2.m4.4"/>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m4.4">t</XMTok>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                  </XMApp>
+                </XMApp>
+              </XMath>
+            </Math>
+            <MathBranch>
+              <tr>
+                <td align="right"><Math mode="inline" tex="\displaystyle\frac{d{\textbf{X}(t)}}{dt}" text="(d * [X] * t) / (d * t)" xml:id="Sx2.E2.m1">
+                    <XMath>
+                      <XMApp>
+                        <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                          <XMText><text font="bold">X</text></XMText>
+                          <XMDual>
+                            <XMRef idref="Sx2.E2.m1.1"/>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m1.1">t</XMTok>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                        </XMApp>
+                      </XMApp>
+                    </XMath>
+                  </Math></td>
+                <td align="center"><Math mode="inline" tex="\displaystyle=" text="=" xml:id="Sx2.E2.m2">
+                    <XMath>
+                      <XMTok meaning="equals" role="RELOP">=</XMTok>
+                    </XMath>
+                  </Math></td>
+                <td align="left"><Math mode="inline" tex="\displaystyle-\nabla L(t,{\textbf{X}}(t))+\xi(t)" text="(- nabla@(L) * open-interval@(t, [X] * t)) + xi * t" xml:id="Sx2.E2.m3">
+                    <XMath>
+                      <XMApp>
+                        <XMTok meaning="plus" role="ADDOP">+</XMTok>
+                        <XMApp>
+                          <XMTok meaning="minus" role="ADDOP">-</XMTok>
+                          <XMApp>
+                            <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                            <XMApp>
+                              <XMTok name="nabla" role="OPERATOR">∇</XMTok>
+                              <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                            </XMApp>
+                            <XMDual>
+                              <XMApp>
+                                <XMTok meaning="open-interval"/>
+                                <XMRef idref="Sx2.E2.m3.2"/>
+                                <XMRef idref="Sx2.E2.m3.4"/>
+                              </XMApp>
+                              <XMWrap>
+                                <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m3.2">t</XMTok>
+                                <XMTok role="PUNCT">,</XMTok>
+                                <XMApp xml:id="Sx2.E2.m3.4">
+                                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                  <XMText><text font="bold">X</text></XMText>
+                                  <XMDual>
+                                    <XMRef idref="Sx2.E2.m3.1"/>
+                                    <XMWrap>
+                                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m3.1">t</XMTok>
+                                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                                    </XMWrap>
+                                  </XMDual>
+                                </XMApp>
+                                <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                              </XMWrap>
+                            </XMDual>
+                          </XMApp>
+                        </XMApp>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok font="italic" name="xi" role="UNKNOWN">ξ</XMTok>
+                          <XMDual>
+                            <XMRef idref="Sx2.E2.m3.3"/>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E2.m3.3">t</XMTok>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMApp>
+                    </XMath>
+                  </Math></td>
+              </tr>
+            </MathBranch>
+          </MathFork>
+        </equation>
+        <equation labels="LABEL:eq:density" xml:id="Sx2.E3">
+          <tags>
+            <tag>(3)</tag>
+            <tag role="autoref">Equation 3</tag>
+            <tag role="refnum">3</tag>
+          </tags>
+          <MathFork>
+            <Math tex="\displaystyle\frac{dL(t,{\textbf{x}})}{dt}=\,\,\delta({\textbf{x}}-{\textbf{X}%&#10;(t)})" text="(d * L * open-interval@(t, [x])) / (d * t) = delta * ([x] - [X] * t)" xml:id="Sx2.E3.m4">
+              <XMath>
+                <XMApp>
+                  <XMTok meaning="equals" role="RELOP" rpadding="3.3pt">=</XMTok>
+                  <XMApp>
+                    <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                      <XMDual>
+                        <XMApp>
+                          <XMTok meaning="open-interval"/>
+                          <XMRef idref="Sx2.E3.m4.1"/>
+                          <XMRef idref="Sx2.E3.m4.2"/>
+                        </XMApp>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E3.m4.1">t</XMTok>
+                          <XMTok role="PUNCT">,</XMTok>
+                          <XMText xml:id="Sx2.E3.m4.2"><text font="bold">x</text></XMText>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                    </XMApp>
+                  </XMApp>
+                  <XMApp>
+                    <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                    <XMTok font="italic" name="delta" role="UNKNOWN">δ</XMTok>
+                    <XMDual>
+                      <XMRef idref="Sx2.E3.m4.4"/>
+                      <XMWrap>
+                        <XMTok role="OPEN" stretchy="false">(</XMTok>
+                        <XMApp xml:id="Sx2.E3.m4.4">
+                          <XMTok meaning="minus" role="ADDOP">-</XMTok>
+                          <XMText><text font="bold">x</text></XMText>
+                          <XMApp>
+                            <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                            <XMText><text font="bold">X</text></XMText>
+                            <XMDual>
+                              <XMRef idref="Sx2.E3.m4.3"/>
+                              <XMWrap>
+                                <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E3.m4.3">t</XMTok>
+                                <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                              </XMWrap>
+                            </XMDual>
+                          </XMApp>
+                        </XMApp>
+                        <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                      </XMWrap>
+                    </XMDual>
+                  </XMApp>
+                </XMApp>
+              </XMath>
+            </Math>
+            <MathBranch>
+              <tr>
+                <td align="right"><Math mode="inline" tex="\displaystyle\frac{dL(t,{\textbf{x}})}{dt}" text="(d * L * open-interval@(t, [x])) / (d * t)" xml:id="Sx2.E3.m1">
+                    <XMath>
+                      <XMApp>
+                        <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                          <XMDual>
+                            <XMApp>
+                              <XMTok meaning="open-interval"/>
+                              <XMRef idref="Sx2.E3.m1.1"/>
+                              <XMRef idref="Sx2.E3.m1.2"/>
+                            </XMApp>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E3.m1.1">t</XMTok>
+                              <XMTok role="PUNCT">,</XMTok>
+                              <XMText xml:id="Sx2.E3.m1.2"><text font="bold">x</text></XMText>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">d</XMTok>
+                          <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                        </XMApp>
+                      </XMApp>
+                    </XMath>
+                  </Math></td>
+                <td align="center"><Math mode="inline" tex="\displaystyle=" text="=" xml:id="Sx2.E3.m2">
+                    <XMath>
+                      <XMTok meaning="equals" role="RELOP">=</XMTok>
+                    </XMath>
+                  </Math></td>
+                <td align="left"><Math mode="inline" tex="\displaystyle\,\,\delta({\textbf{x}}-{\textbf{X}(t)})" text="delta * ([x] - [X] * t)" xml:id="Sx2.E3.m3">
+                    <XMath>
+                      <XMApp>
+                        <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                        <XMTok font="italic" lpadding="3.3pt" name="delta" role="UNKNOWN">δ</XMTok>
+                        <XMDual>
+                          <XMRef idref="Sx2.E3.m3.2"/>
+                          <XMWrap>
+                            <XMTok role="OPEN" stretchy="false">(</XMTok>
+                            <XMApp xml:id="Sx2.E3.m3.2">
+                              <XMTok meaning="minus" role="ADDOP">-</XMTok>
+                              <XMText><text font="bold">x</text></XMText>
+                              <XMApp>
+                                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                <XMText><text font="bold">X</text></XMText>
+                                <XMDual>
+                                  <XMRef idref="Sx2.E3.m3.1"/>
+                                  <XMWrap>
+                                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E3.m3.1">t</XMTok>
+                                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                                  </XMWrap>
+                                </XMDual>
+                              </XMApp>
+                            </XMApp>
+                            <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                          </XMWrap>
+                        </XMDual>
+                      </XMApp>
+                    </XMath>
+                  </Math></td>
+              </tr>
+            </MathBranch>
+          </MathFork>
+        </equation>
+      </equationgroup>
+      <p>The function, <Math mode="inline" tex="L(t,{\textbf{x}})" text="L * open-interval@(t, [x])" xml:id="Sx2.p2.m1">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+              <XMTok font="italic" role="UNKNOWN">L</XMTok>
+              <XMDual>
+                <XMApp>
+                  <XMTok meaning="open-interval"/>
+                  <XMRef idref="Sx2.p2.m1.1"/>
+                  <XMRef idref="Sx2.p2.m1.2"/>
+                </XMApp>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">(</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.p2.m1.1">t</XMTok>
+                  <XMTok role="PUNCT">,</XMTok>
+                  <XMText xml:id="Sx2.p2.m1.2"><text font="bold">x</text></XMText>
+                  <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMApp>
+          </XMath>
+        </Math>, a <text font="italic">local time</text>, cumulates memory as to
+the occupation of the position <Math mode="inline" tex="{\textbf{X}}(t)" text="[X] * t" xml:id="Sx2.p2.m2">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+              <XMText><text font="bold">X</text></XMText>
+              <XMDual>
+                <XMRef idref="Sx2.p2.m2.1"/>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">(</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.p2.m2.1">t</XMTok>
+                  <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMApp>
+          </XMath>
+        </Math>. <text color="#000000"> It is the
+continuum analogue of the discrete variable <Math mode="inline" tex="L_{i}" text="L _ i" xml:id="Sx2.p2.m3">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                <XMTok font="italic" fontsize="70%" role="UNKNOWN">i</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> of eq.(<ref labelref="LABEL:eq:disc"/>). We use
+the symbol <Math mode="inline" tex="L" text="L" xml:id="Sx2.p2.m4">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">L</XMTok>
+            </XMath>
+          </Math> for the both the discrete and continuum variables</text>. <text color="#000000"> <Math mode="inline" tex="\xi(t)" text="xi * t" xml:id="Sx2.p2.m5">
+            <XMath>
+              <XMApp>
+                <XMTok color="#000000" meaning="times" role="MULOP">⁢</XMTok>
+                <XMTok font="italic" name="xi" role="UNKNOWN">ξ</XMTok>
+                <XMDual>
+                  <XMRef idref="Sx2.p2.m5.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.p2.m5.1">t</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> in the
+formulation <cite class="ltx_citemacro_cite">[<bibref bibrefs="Amit" separator="," yyseparator=","/>]</cite> corresponds to Gaussian noise.</text> The growth of the end of the
+growing polymer is then repelled by regions where <Math mode="inline" tex="L(t,{\textbf{x}})" text="L * open-interval@(t, [x])" xml:id="Sx2.p2.m6">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+              <XMTok font="italic" role="UNKNOWN">L</XMTok>
+              <XMDual>
+                <XMApp>
+                  <XMTok meaning="open-interval"/>
+                  <XMRef idref="Sx2.p2.m6.1"/>
+                  <XMRef idref="Sx2.p2.m6.2"/>
+                </XMApp>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">(</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.p2.m6.1">t</XMTok>
+                  <XMTok role="PUNCT">,</XMTok>
+                  <XMText xml:id="Sx2.p2.m6.2"><text font="bold">x</text></XMText>
+                  <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMApp>
+          </XMath>
+        </Math> has become
+large, in a manner which is analogous to the original lattice model. This
+continuum model is amenable to many of the formal methods of field
+theory <cite class="ltx_citemacro_cite">[<bibref bibrefs="PELITI1984225,Obukhov_1983" separator="," yyseparator=","/>]</cite>.</p>
+    </para>
+    <subsection xml:id="Sx2.SSx1">
+      <title>Distributions functions of the model</title>
+      <para xml:id="Sx2.SSx1.p1">
+        <p>Remarkably, the equations (<ref labelref="LABEL:eq:motion"/>, <ref labelref="LABEL:eq:density"/>) in one dimension
+lead to an explicitly solvable model <cite class="ltx_citemacro_cite">[<bibref bibrefs="Toth,DUMAZ20131454" separator="," yyseparator=","/>]</cite> involving time
+scaling in <Math mode="inline" tex="t^{2/3}" text="t ^ (2 / 3)" xml:id="Sx2.SSx1.p1.m1">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math> or <Math mode="inline" tex="t^{1/3}" text="t ^ (1 / 3)" xml:id="Sx2.SSx1.p1.m2">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math> for distribution functions; the Langevin-like
+eq. (<ref labelref="LABEL:eq:motion"/>), does not lead to Brownian scaling in <Math mode="inline" tex="t^{1/2}" text="t ^ (1 / 2)" xml:id="Sx2.SSx1.p1.m3">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. The exact
+solutions displayed in <cite class="ltx_citemacro_cite">[<bibref bibrefs="DUMAZ20131454" separator="," yyseparator=","/>]</cite> show that two important
+distributions of physical variables exhibit scaling forms:</p>
+        <equationgroup class="ltx_eqn_eqnarray" xml:id="Sx6.EGx2">
+          <equation labels="LABEL:eq:scale1" xml:id="Sx2.E4">
+            <tags>
+              <tag>(4)</tag>
+              <tag role="autoref">Equation 4</tag>
+              <tag role="refnum">4</tag>
+            </tags>
+            <MathFork>
+              <Math tex="\displaystyle\rho_{1}(t,x)=t^{-2/3}\nu_{1}(xt^{-2/3})" text="rho _ 1 * open-interval@(t, x) = t ^ (- 2 / 3) * nu _ 1 * x * t ^ (- 2 / 3)" xml:id="Sx2.E4.m4">
+                <XMath>
+                  <XMApp>
+                    <XMTok meaning="equals" role="RELOP">=</XMTok>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                        <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMApp>
+                          <XMTok meaning="open-interval"/>
+                          <XMRef idref="Sx2.E4.m4.1"/>
+                          <XMRef idref="Sx2.E4.m4.2"/>
+                        </XMApp>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E4.m4.1">t</XMTok>
+                          <XMTok role="PUNCT">,</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E4.m4.2">x</XMTok>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                        <XMApp>
+                          <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                          <XMApp>
+                            <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                            <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                            <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                          </XMApp>
+                        </XMApp>
+                      </XMApp>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                        <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMRef idref="Sx2.E4.m4.3"/>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMApp xml:id="Sx2.E4.m4.3">
+                            <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                            <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                            <XMApp>
+                              <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                                <XMApp>
+                                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                </XMApp>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                  </XMApp>
+                </XMath>
+              </Math>
+              <MathBranch>
+                <tr>
+                  <td align="right"><Math mode="inline" tex="\displaystyle\rho_{1}(t,x)" text="rho _ 1 * open-interval@(t, x)" xml:id="Sx2.E4.m1">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                            <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                          </XMApp>
+                          <XMDual>
+                            <XMApp>
+                              <XMTok meaning="open-interval"/>
+                              <XMRef idref="Sx2.E4.m1.1"/>
+                              <XMRef idref="Sx2.E4.m1.2"/>
+                            </XMApp>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E4.m1.1">t</XMTok>
+                              <XMTok role="PUNCT">,</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E4.m1.2">x</XMTok>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                  <td align="center"><Math mode="inline" tex="\displaystyle=" text="=" xml:id="Sx2.E4.m2">
+                      <XMath>
+                        <XMTok meaning="equals" role="RELOP">=</XMTok>
+                      </XMath>
+                    </Math></td>
+                  <td align="left"><Math mode="inline" tex="\displaystyle t^{-2/3}\nu_{1}(xt^{-2/3})" text="t ^ (- 2 / 3) * nu _ 1 * x * t ^ (- 2 / 3)" xml:id="Sx2.E4.m3">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                            <XMApp>
+                              <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                                <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                            <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                          </XMApp>
+                          <XMDual>
+                            <XMRef idref="Sx2.E4.m3.1"/>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMApp xml:id="Sx2.E4.m3.1">
+                                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                                <XMApp>
+                                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                                  <XMApp>
+                                    <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                                    <XMApp>
+                                      <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                      <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                                      <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                    </XMApp>
+                                  </XMApp>
+                                </XMApp>
+                              </XMApp>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                </tr>
+              </MathBranch>
+            </MathFork>
+          </equation>
+          <equation labels="LABEL:eq:scale2" xml:id="Sx2.E5">
+            <tags>
+              <tag>(5)</tag>
+              <tag role="autoref">Equation 5</tag>
+              <tag role="refnum">5</tag>
+            </tags>
+            <MathFork>
+              <Math tex="\displaystyle\rho_{2}(t,h)=t^{-1/3}\nu_{2}(ht^{-1/3})" text="rho _ 2 * open-interval@(t, h) = t ^ (- 1 / 3) * nu _ 2 * h * t ^ (- 1 / 3)" xml:id="Sx2.E5.m4">
+                <XMath>
+                  <XMApp>
+                    <XMTok meaning="equals" role="RELOP">=</XMTok>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                        <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMApp>
+                          <XMTok meaning="open-interval"/>
+                          <XMRef idref="Sx2.E5.m4.1"/>
+                          <XMRef idref="Sx2.E5.m4.2"/>
+                        </XMApp>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E5.m4.1">t</XMTok>
+                          <XMTok role="PUNCT">,</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E5.m4.2">h</XMTok>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                        <XMApp>
+                          <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                          <XMApp>
+                            <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                            <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                            <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                          </XMApp>
+                        </XMApp>
+                      </XMApp>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                        <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMRef idref="Sx2.E5.m4.3"/>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMApp xml:id="Sx2.E5.m4.3">
+                            <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                            <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                            <XMApp>
+                              <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                                <XMApp>
+                                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                </XMApp>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                  </XMApp>
+                </XMath>
+              </Math>
+              <MathBranch>
+                <tr>
+                  <td align="right"><Math mode="inline" tex="\displaystyle\rho_{2}(t,h)" text="rho _ 2 * open-interval@(t, h)" xml:id="Sx2.E5.m1">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                            <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                          </XMApp>
+                          <XMDual>
+                            <XMApp>
+                              <XMTok meaning="open-interval"/>
+                              <XMRef idref="Sx2.E5.m1.1"/>
+                              <XMRef idref="Sx2.E5.m1.2"/>
+                            </XMApp>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E5.m1.1">t</XMTok>
+                              <XMTok role="PUNCT">,</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E5.m1.2">h</XMTok>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                  <td align="center"><Math mode="inline" tex="\displaystyle=" text="=" xml:id="Sx2.E5.m2">
+                      <XMath>
+                        <XMTok meaning="equals" role="RELOP">=</XMTok>
+                      </XMath>
+                    </Math></td>
+                  <td align="left"><Math mode="inline" tex="\displaystyle t^{-1/3}\nu_{2}(ht^{-1/3})" text="t ^ (- 1 / 3) * nu _ 2 * h * t ^ (- 1 / 3)" xml:id="Sx2.E5.m3">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                            <XMApp>
+                              <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                                <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                            <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                          </XMApp>
+                          <XMDual>
+                            <XMRef idref="Sx2.E5.m3.1"/>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMApp xml:id="Sx2.E5.m3.1">
+                                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                                <XMApp>
+                                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                                  <XMApp>
+                                    <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                                    <XMApp>
+                                      <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                      <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                                      <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                    </XMApp>
+                                  </XMApp>
+                                </XMApp>
+                              </XMApp>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                </tr>
+              </MathBranch>
+            </MathFork>
+          </equation>
+        </equationgroup>
+        <p><Math mode="inline" tex="\rho_{1}(t,x)" text="rho _ 1 * open-interval@(t, x)" xml:id="Sx2.SSx1.p1.m4">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="open-interval"/>
+                    <XMRef idref="Sx2.SSx1.p1.m4.1"/>
+                    <XMRef idref="Sx2.SSx1.p1.m4.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m4.1">t</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m4.2">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> is the distribution of displacement of the process after time <Math mode="inline" tex="t" text="t" xml:id="Sx2.SSx1.p1.m5">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+            </XMath>
+          </Math>;
+in the original polymer problem of <cite class="ltx_citemacro_cite">[<bibref bibrefs="Amit" separator="," yyseparator=","/>]</cite> it is the distribution of
+end-to-end separations. <Math mode="inline" tex="\rho_{2}(t,h)" text="rho _ 2 * open-interval@(t, h)" xml:id="Sx2.SSx1.p1.m6">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="open-interval"/>
+                    <XMRef idref="Sx2.SSx1.p1.m6.1"/>
+                    <XMRef idref="Sx2.SSx1.p1.m6.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m6.1">t</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m6.2">h</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> is the distribution of <Math mode="inline" tex="h(t)=L(t,X(t))" text="h * t = L * open-interval@(t, X * t)" xml:id="Sx2.SSx1.p1.m7">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                  <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                  <XMDual>
+                    <XMRef idref="Sx2.SSx1.p1.m7.1"/>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m7.1">t</XMTok>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                  <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                  <XMDual>
+                    <XMApp>
+                      <XMTok meaning="open-interval"/>
+                      <XMRef idref="Sx2.SSx1.p1.m7.3"/>
+                      <XMRef idref="Sx2.SSx1.p1.m7.4"/>
+                    </XMApp>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m7.3">t</XMTok>
+                      <XMTok role="PUNCT">,</XMTok>
+                      <XMApp xml:id="Sx2.SSx1.p1.m7.4">
+                        <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                        <XMTok font="italic" role="UNKNOWN">X</XMTok>
+                        <XMDual>
+                          <XMRef idref="Sx2.SSx1.p1.m7.2"/>
+                          <XMWrap>
+                            <XMTok role="OPEN" stretchy="false">(</XMTok>
+                            <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m7.2">t</XMTok>
+                            <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                          </XMWrap>
+                        </XMDual>
+                      </XMApp>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>,
+the density of previous visits to the endpoint of the polymer. The scaling
+functions are</p>
+        <equationgroup class="ltx_eqn_eqnarray" xml:id="Sx6.EGx3">
+          <equation labels="LABEL:eq:nu1" xml:id="Sx2.E6">
+            <tags>
+              <tag>(6)</tag>
+              <tag role="autoref">Equation 6</tag>
+              <tag role="refnum">6</tag>
+            </tags>
+            <MathFork>
+              <Math tex="\displaystyle\nu_{1}(x)=\sum_{k=1}^{\infty}\frac{p_{k}}{2}\delta^{\prime}_{k}f%&#10;_{2/3}(\delta^{\prime}_{k}|x|)" text="nu _ 1 * x = ((sum _ (k = 1)) ^ infinity)@((p _ k / 2) * (delta ^ prime) _ k * f _ (2 / 3) * (delta ^ prime) _ k * absolute-value@(x))" xml:id="Sx2.E6.m4">
+                <XMath>
+                  <XMApp>
+                    <XMTok meaning="equals" role="RELOP">=</XMTok>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                        <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMRef idref="Sx2.E6.m4.1"/>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E6.m4.1">x</XMTok>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                    <XMApp>
+                      <XMApp>
+                        <XMTok role="SUPERSCRIPTOP" scriptpos="mid1"/>
+                        <XMApp>
+                          <XMTok role="SUBSCRIPTOP" scriptpos="mid1"/>
+                          <XMTok mathstyle="display" meaning="sum" role="SUMOP" scriptpos="mid">∑</XMTok>
+                          <XMApp>
+                            <XMTok fontsize="70%" meaning="equals" role="RELOP">=</XMTok>
+                            <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                            <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                          </XMApp>
+                        </XMApp>
+                        <XMTok fontsize="70%" meaning="infinity" name="infty" role="ID">∞</XMTok>
+                      </XMApp>
+                      <XMApp>
+                        <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                        <XMApp>
+                          <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post2"/>
+                            <XMTok font="italic" role="UNKNOWN">p</XMTok>
+                            <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                          </XMApp>
+                          <XMTok meaning="2" role="NUMBER">2</XMTok>
+                        </XMApp>
+                        <XMApp>
+                          <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                          <XMApp>
+                            <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="delta" role="UNKNOWN">δ</XMTok>
+                            <XMTok fontsize="70%" name="prime" role="SUPOP">′</XMTok>
+                          </XMApp>
+                          <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                        </XMApp>
+                        <XMApp>
+                          <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                          <XMTok font="italic" role="UNKNOWN">f</XMTok>
+                          <XMApp>
+                            <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                            <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                            <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                          </XMApp>
+                        </XMApp>
+                        <XMDual>
+                          <XMRef idref="Sx2.E6.m4.3"/>
+                          <XMWrap>
+                            <XMTok role="OPEN" stretchy="false">(</XMTok>
+                            <XMApp xml:id="Sx2.E6.m4.3">
+                              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                              <XMApp>
+                                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                                <XMApp>
+                                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                  <XMTok font="italic" name="delta" role="UNKNOWN">δ</XMTok>
+                                  <XMTok fontsize="70%" name="prime" role="SUPOP">′</XMTok>
+                                </XMApp>
+                                <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                              </XMApp>
+                              <XMDual>
+                                <XMApp>
+                                  <XMTok meaning="absolute-value"/>
+                                  <XMRef idref="Sx2.E6.m4.2"/>
+                                </XMApp>
+                                <XMWrap>
+                                  <XMTok role="OPEN" stretchy="false">|</XMTok>
+                                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E6.m4.2">x</XMTok>
+                                  <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                                </XMWrap>
+                              </XMDual>
+                            </XMApp>
+                            <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                          </XMWrap>
+                        </XMDual>
+                      </XMApp>
+                    </XMApp>
+                  </XMApp>
+                </XMath>
+              </Math>
+              <MathBranch>
+                <tr>
+                  <td align="right"><Math mode="inline" tex="\displaystyle\nu_{1}(x)" text="nu _ 1 * x" xml:id="Sx2.E6.m1">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                            <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                          </XMApp>
+                          <XMDual>
+                            <XMRef idref="Sx2.E6.m1.1"/>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E6.m1.1">x</XMTok>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                  <td align="center"><Math mode="inline" tex="\displaystyle=" text="=" xml:id="Sx2.E6.m2">
+                      <XMath>
+                        <XMTok meaning="equals" role="RELOP">=</XMTok>
+                      </XMath>
+                    </Math></td>
+                  <td align="left"><Math mode="inline" tex="\displaystyle\sum_{k=1}^{\infty}\frac{p_{k}}{2}\delta^{\prime}_{k}f_{2/3}(%&#10;\delta^{\prime}_{k}|x|)" text="((sum _ (k = 1)) ^ infinity)@((p _ k / 2) * (delta ^ prime) _ k * f _ (2 / 3) * (delta ^ prime) _ k * absolute-value@(x))" xml:id="Sx2.E6.m3">
+                      <XMath>
+                        <XMApp>
+                          <XMApp>
+                            <XMTok role="SUPERSCRIPTOP" scriptpos="mid1"/>
+                            <XMApp>
+                              <XMTok role="SUBSCRIPTOP" scriptpos="mid1"/>
+                              <XMTok mathstyle="display" meaning="sum" role="SUMOP" scriptpos="mid">∑</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="equals" role="RELOP">=</XMTok>
+                                <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                                <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                              </XMApp>
+                            </XMApp>
+                            <XMTok fontsize="70%" meaning="infinity" name="infty" role="ID">∞</XMTok>
+                          </XMApp>
+                          <XMApp>
+                            <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                            <XMApp>
+                              <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                              <XMApp>
+                                <XMTok role="SUBSCRIPTOP" scriptpos="post2"/>
+                                <XMTok font="italic" role="UNKNOWN">p</XMTok>
+                                <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                              </XMApp>
+                              <XMTok meaning="2" role="NUMBER">2</XMTok>
+                            </XMApp>
+                            <XMApp>
+                              <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                              <XMApp>
+                                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                <XMTok font="italic" name="delta" role="UNKNOWN">δ</XMTok>
+                                <XMTok fontsize="70%" name="prime" role="SUPOP">′</XMTok>
+                              </XMApp>
+                              <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                            </XMApp>
+                            <XMApp>
+                              <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                              <XMTok font="italic" role="UNKNOWN">f</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                                <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                              </XMApp>
+                            </XMApp>
+                            <XMDual>
+                              <XMRef idref="Sx2.E6.m3.2"/>
+                              <XMWrap>
+                                <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                <XMApp xml:id="Sx2.E6.m3.2">
+                                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                  <XMApp>
+                                    <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                                    <XMApp>
+                                      <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                      <XMTok font="italic" name="delta" role="UNKNOWN">δ</XMTok>
+                                      <XMTok fontsize="70%" name="prime" role="SUPOP">′</XMTok>
+                                    </XMApp>
+                                    <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+                                  </XMApp>
+                                  <XMDual>
+                                    <XMApp>
+                                      <XMTok meaning="absolute-value"/>
+                                      <XMRef idref="Sx2.E6.m3.1"/>
+                                    </XMApp>
+                                    <XMWrap>
+                                      <XMTok role="OPEN" stretchy="false">|</XMTok>
+                                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E6.m3.1">x</XMTok>
+                                      <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                                    </XMWrap>
+                                  </XMDual>
+                                </XMApp>
+                                <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                              </XMWrap>
+                            </XMDual>
+                          </XMApp>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                </tr>
+              </MathBranch>
+            </MathFork>
+          </equation>
+          <equation labels="LABEL:eq:nu2" xml:id="Sx2.E7">
+            <tags>
+              <tag>(7)</tag>
+              <tag role="autoref">Equation 7</tag>
+              <tag role="refnum">7</tag>
+            </tags>
+            <MathFork>
+              <Math tex="\displaystyle\nu_{2}(h)=\frac{2\cdot 6^{1/3}\sqrt{\pi}}{\Gamma{(1/3)}^{2}}e^{-%&#10;(8h^{3})/9}U(1/6,2/3,(8h^{3})/9)" text="nu _ 2 * h = (((2 cdot 6 ^ (1 / 3)) * square-root@(pi)) / (Gamma * (1 / 3) ^ 2)) * e ^ (- (8 * h ^ 3) / 9) * U * vector@(1 / 6, 2 / 3, (8 * h ^ 3) / 9)" xml:id="Sx2.E7.m4">
+                <XMath>
+                  <XMApp>
+                    <XMTok meaning="equals" role="RELOP">=</XMTok>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                        <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                      </XMApp>
+                      <XMDual>
+                        <XMRef idref="Sx2.E7.m4.3"/>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E7.m4.3">h</XMTok>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                    <XMApp>
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMApp>
+                        <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok name="cdot" role="MULOP">⋅</XMTok>
+                            <XMTok meaning="2" role="NUMBER">2</XMTok>
+                            <XMApp>
+                              <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                              <XMTok meaning="6" role="NUMBER">6</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                                <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMApp>
+                            <XMTok meaning="square-root"/>
+                            <XMTok font="italic" name="pi" role="UNKNOWN">π</XMTok>
+                          </XMApp>
+                        </XMApp>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok name="Gamma" role="UNKNOWN">Γ</XMTok>
+                          <XMApp>
+                            <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                            <XMDual>
+                              <XMRef idref="Sx2.E7.m4.1"/>
+                              <XMWrap>
+                                <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                <XMApp xml:id="Sx2.E7.m4.1">
+                                  <XMTok meaning="divide" role="MULOP">/</XMTok>
+                                  <XMTok meaning="1" role="NUMBER">1</XMTok>
+                                  <XMTok meaning="3" role="NUMBER">3</XMTok>
+                                </XMApp>
+                                <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                              </XMWrap>
+                            </XMDual>
+                            <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                          </XMApp>
+                        </XMApp>
+                      </XMApp>
+                      <XMApp>
+                        <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" role="UNKNOWN">e</XMTok>
+                        <XMApp>
+                          <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                          <XMApp>
+                            <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                            <XMDual>
+                              <XMRef idref="Sx2.E7.m4.2"/>
+                              <XMWrap>
+                                <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                                <XMApp xml:id="Sx2.E7.m4.2">
+                                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                  <XMTok fontsize="70%" meaning="8" role="NUMBER">8</XMTok>
+                                  <XMApp>
+                                    <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                                    <XMTok font="italic" fontsize="70%" role="UNKNOWN">h</XMTok>
+                                    <XMTok fontsize="50%" meaning="3" role="NUMBER">3</XMTok>
+                                  </XMApp>
+                                </XMApp>
+                                <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                              </XMWrap>
+                            </XMDual>
+                            <XMTok fontsize="70%" meaning="9" role="NUMBER">9</XMTok>
+                          </XMApp>
+                        </XMApp>
+                      </XMApp>
+                      <XMTok font="italic" role="UNKNOWN">U</XMTok>
+                      <XMDual>
+                        <XMApp>
+                          <XMTok meaning="vector"/>
+                          <XMRef idref="Sx2.E7.m4.4"/>
+                          <XMRef idref="Sx2.E7.m4.5"/>
+                          <XMRef idref="Sx2.E7.m4.6"/>
+                        </XMApp>
+                        <XMWrap>
+                          <XMTok role="OPEN" stretchy="false">(</XMTok>
+                          <XMApp xml:id="Sx2.E7.m4.4">
+                            <XMTok meaning="divide" role="MULOP">/</XMTok>
+                            <XMTok meaning="1" role="NUMBER">1</XMTok>
+                            <XMTok meaning="6" role="NUMBER">6</XMTok>
+                          </XMApp>
+                          <XMTok role="PUNCT">,</XMTok>
+                          <XMApp xml:id="Sx2.E7.m4.5">
+                            <XMTok meaning="divide" role="MULOP">/</XMTok>
+                            <XMTok meaning="2" role="NUMBER">2</XMTok>
+                            <XMTok meaning="3" role="NUMBER">3</XMTok>
+                          </XMApp>
+                          <XMTok role="PUNCT">,</XMTok>
+                          <XMApp xml:id="Sx2.E7.m4.6">
+                            <XMTok meaning="divide" role="MULOP">/</XMTok>
+                            <XMDual>
+                              <XMRef idref="Sx2.E7.m4.6.1"/>
+                              <XMWrap>
+                                <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                <XMApp xml:id="Sx2.E7.m4.6.1">
+                                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                  <XMTok meaning="8" role="NUMBER">8</XMTok>
+                                  <XMApp>
+                                    <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                    <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                                    <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                  </XMApp>
+                                </XMApp>
+                                <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                              </XMWrap>
+                            </XMDual>
+                            <XMTok meaning="9" role="NUMBER">9</XMTok>
+                          </XMApp>
+                          <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                        </XMWrap>
+                      </XMDual>
+                    </XMApp>
+                  </XMApp>
+                </XMath>
+              </Math>
+              <MathBranch>
+                <tr>
+                  <td align="right"><Math mode="inline" tex="\displaystyle\nu_{2}(h)" text="nu _ 2 * h" xml:id="Sx2.E7.m1">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                            <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                          </XMApp>
+                          <XMDual>
+                            <XMRef idref="Sx2.E7.m1.1"/>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E7.m1.1">h</XMTok>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                  <td align="center"><Math mode="inline" tex="\displaystyle=" text="=" xml:id="Sx2.E7.m2">
+                      <XMath>
+                        <XMTok meaning="equals" role="RELOP">=</XMTok>
+                      </XMath>
+                    </Math></td>
+                  <td align="left"><Math mode="inline" tex="\displaystyle\frac{2\cdot 6^{1/3}\sqrt{\pi}}{\Gamma{(1/3)}^{2}}e^{-(8h^{3})/9}%&#10;U(1/6,2/3,(8h^{3})/9)" text="(((2 cdot 6 ^ (1 / 3)) * square-root@(pi)) / (Gamma * (1 / 3) ^ 2)) * e ^ (- (8 * h ^ 3) / 9) * U * vector@(1 / 6, 2 / 3, (8 * h ^ 3) / 9)" xml:id="Sx2.E7.m3">
+                      <XMath>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMApp>
+                            <XMTok mathstyle="display" meaning="divide" role="FRACOP"/>
+                            <XMApp>
+                              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                              <XMApp>
+                                <XMTok name="cdot" role="MULOP">⋅</XMTok>
+                                <XMTok meaning="2" role="NUMBER">2</XMTok>
+                                <XMApp>
+                                  <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                                  <XMTok meaning="6" role="NUMBER">6</XMTok>
+                                  <XMApp>
+                                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                    <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                                    <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                  </XMApp>
+                                </XMApp>
+                              </XMApp>
+                              <XMApp>
+                                <XMTok meaning="square-root"/>
+                                <XMTok font="italic" name="pi" role="UNKNOWN">π</XMTok>
+                              </XMApp>
+                            </XMApp>
+                            <XMApp>
+                              <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                              <XMTok name="Gamma" role="UNKNOWN">Γ</XMTok>
+                              <XMApp>
+                                <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                                <XMDual>
+                                  <XMRef idref="Sx2.E7.m3.1"/>
+                                  <XMWrap>
+                                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                    <XMApp xml:id="Sx2.E7.m3.1">
+                                      <XMTok meaning="divide" role="MULOP">/</XMTok>
+                                      <XMTok meaning="1" role="NUMBER">1</XMTok>
+                                      <XMTok meaning="3" role="NUMBER">3</XMTok>
+                                    </XMApp>
+                                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                                  </XMWrap>
+                                </XMDual>
+                                <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMApp>
+                            <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                            <XMTok font="italic" role="UNKNOWN">e</XMTok>
+                            <XMApp>
+                              <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                              <XMApp>
+                                <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                                <XMDual>
+                                  <XMRef idref="Sx2.E7.m3.2"/>
+                                  <XMWrap>
+                                    <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                                    <XMApp xml:id="Sx2.E7.m3.2">
+                                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                      <XMTok fontsize="70%" meaning="8" role="NUMBER">8</XMTok>
+                                      <XMApp>
+                                        <XMTok role="SUPERSCRIPTOP" scriptpos="post2"/>
+                                        <XMTok font="italic" fontsize="70%" role="UNKNOWN">h</XMTok>
+                                        <XMTok fontsize="50%" meaning="3" role="NUMBER">3</XMTok>
+                                      </XMApp>
+                                    </XMApp>
+                                    <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                                  </XMWrap>
+                                </XMDual>
+                                <XMTok fontsize="70%" meaning="9" role="NUMBER">9</XMTok>
+                              </XMApp>
+                            </XMApp>
+                          </XMApp>
+                          <XMTok font="italic" role="UNKNOWN">U</XMTok>
+                          <XMDual>
+                            <XMApp>
+                              <XMTok meaning="vector"/>
+                              <XMRef idref="Sx2.E7.m3.3"/>
+                              <XMRef idref="Sx2.E7.m3.4"/>
+                              <XMRef idref="Sx2.E7.m3.5"/>
+                            </XMApp>
+                            <XMWrap>
+                              <XMTok role="OPEN" stretchy="false">(</XMTok>
+                              <XMApp xml:id="Sx2.E7.m3.3">
+                                <XMTok meaning="divide" role="MULOP">/</XMTok>
+                                <XMTok meaning="1" role="NUMBER">1</XMTok>
+                                <XMTok meaning="6" role="NUMBER">6</XMTok>
+                              </XMApp>
+                              <XMTok role="PUNCT">,</XMTok>
+                              <XMApp xml:id="Sx2.E7.m3.4">
+                                <XMTok meaning="divide" role="MULOP">/</XMTok>
+                                <XMTok meaning="2" role="NUMBER">2</XMTok>
+                                <XMTok meaning="3" role="NUMBER">3</XMTok>
+                              </XMApp>
+                              <XMTok role="PUNCT">,</XMTok>
+                              <XMApp xml:id="Sx2.E7.m3.5">
+                                <XMTok meaning="divide" role="MULOP">/</XMTok>
+                                <XMDual>
+                                  <XMRef idref="Sx2.E7.m3.5.1"/>
+                                  <XMWrap>
+                                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                                    <XMApp xml:id="Sx2.E7.m3.5.1">
+                                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                                      <XMTok meaning="8" role="NUMBER">8</XMTok>
+                                      <XMApp>
+                                        <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                                        <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                                        <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                                      </XMApp>
+                                    </XMApp>
+                                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                                  </XMWrap>
+                                </XMDual>
+                                <XMTok meaning="9" role="NUMBER">9</XMTok>
+                              </XMApp>
+                              <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                            </XMWrap>
+                          </XMDual>
+                        </XMApp>
+                      </XMath>
+                    </Math></td>
+                </tr>
+              </MathBranch>
+            </MathFork>
+          </equation>
+        </equationgroup>
+        <p><Math mode="inline" tex="f_{2/3}(x)" text="f _ (2 / 3) * x" xml:id="Sx2.SSx1.p1.m8">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">f</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                    <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                  </XMApp>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx2.SSx1.p1.m8.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx1.p1.m8.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> is the Mittag-Leffler function. <Math mode="inline" tex="\delta^{\prime}_{k}" text="(delta ^ prime) _ k" xml:id="Sx2.SSx1.p1.m9">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="delta" role="UNKNOWN">δ</XMTok>
+                  <XMTok fontsize="70%" name="prime" role="SUPOP">′</XMTok>
+                </XMApp>
+                <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> and <Math mode="inline" tex="p_{k}" text="p _ k" xml:id="Sx2.SSx1.p1.m10">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">p</XMTok>
+                <XMTok font="italic" fontsize="70%" role="UNKNOWN">k</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> are
+calculated from the k’th zero of the derivative of an Airy
+function <cite class="ltx_citemacro_cite">[<bibref bibrefs="DUMAZ20131454" separator="," yyseparator=","/>]</cite>, <Math mode="inline" tex="U" text="U" xml:id="Sx2.SSx1.p1.m11">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">U</XMTok>
+            </XMath>
+          </Math> is a confluent hypergeometric function of the
+second kind <cite class="ltx_citemacro_cite">[<bibref bibrefs="NIST" separator="," yyseparator=","/>]</cite>. <text color="#000000"> The two functions
+eq. (<ref labelref="LABEL:eq:nu1"/>, <ref labelref="LABEL:eq:nu2"/>), are rather distinctive visually and are far
+from Gaussian. They are plotted, in red, in Figs. <ref labelref="LABEL:fig:nu1"/>, <ref labelref="LABEL:fig:nu2"/> </text>.</p>
+      </para>
+    </subsection>
+    <subsection xml:id="Sx2.SSx2">
+      <title>Scaling argument for motion</title>
+      <para xml:id="Sx2.SSx2.p1">
+        <p><!--  %“sout–“tiny -->A scaling argument <cite class="ltx_citemacro_cite">[<bibref bibrefs="Pietronero" separator="," yyseparator=","/>]</cite>, allows one to find the exponents
+describing the solutions. Let motion occur on the length scale <Math mode="inline" tex="t^{\alpha}" text="t ^ alpha" xml:id="Sx2.SSx2.p1.m1">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> in
+time <Math mode="inline" tex="t" text="t" xml:id="Sx2.SSx2.p1.m2">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+            </XMath>
+          </Math>. Then <Math mode="inline" tex="L" text="L" xml:id="Sx2.SSx2.p1.m3">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">L</XMTok>
+            </XMath>
+          </Math> must be of the form</p>
+        <equation labels="LABEL:eq:L" xml:id="Sx2.E8">
+          <tags>
+            <tag>(8)</tag>
+            <tag role="autoref">Equation 8</tag>
+            <tag role="refnum">8</tag>
+          </tags>
+          <Math mode="display" tex="L(t,x)\sim t^{(1-\alpha)}g(x/t^{\alpha})" text="L * open-interval@(t, x) similar-to t ^ (1 - alpha) * g * (x / t ^ alpha)" xml:id="Sx2.E8.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                  <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                  <XMDual>
+                    <XMApp>
+                      <XMTok meaning="open-interval"/>
+                      <XMRef idref="Sx2.E8.m1.2"/>
+                      <XMRef idref="Sx2.E8.m1.3"/>
+                    </XMApp>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E8.m1.2">t</XMTok>
+                      <XMTok role="PUNCT">,</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.E8.m1.3">x</XMTok>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                  <XMApp>
+                    <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                    <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                    <XMDual>
+                      <XMRef idref="Sx2.E8.m1.1"/>
+                      <XMWrap>
+                        <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                        <XMApp xml:id="Sx2.E8.m1.1">
+                          <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                          <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                          <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                        </XMApp>
+                        <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                      </XMWrap>
+                    </XMDual>
+                  </XMApp>
+                  <XMTok font="italic" role="UNKNOWN">g</XMTok>
+                  <XMDual>
+                    <XMRef idref="Sx2.E8.m1.4"/>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMApp xml:id="Sx2.E8.m1.4">
+                        <XMTok meaning="divide" role="MULOP">/</XMTok>
+                        <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                        <XMApp>
+                          <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                          <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                          <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                        </XMApp>
+                      </XMApp>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>
+        </equation>
+        <p><text color="#000000">with an unknown scaling function <Math mode="inline" tex="g(x)" text="g * x" xml:id="Sx2.SSx2.p1.m4">
+              <XMath>
+                <XMApp>
+                  <XMTok color="#000000" meaning="times" role="MULOP">⁢</XMTok>
+                  <XMTok font="italic" role="UNKNOWN">g</XMTok>
+                  <XMDual>
+                    <XMRef idref="Sx2.SSx2.p1.m4.1"/>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx2.p1.m4.1">x</XMTok>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+              </XMath>
+            </Math>.</text>
+The driving force from eq. (<ref labelref="LABEL:eq:motion"/>), <Math mode="inline" tex="-\nabla L(t,x)" text="- nabla@(L) * open-interval@(t, x)" xml:id="Sx2.SSx2.p1.m5">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="minus" role="ADDOP">-</XMTok>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                  <XMApp>
+                    <XMTok name="nabla" role="OPERATOR">∇</XMTok>
+                    <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                  </XMApp>
+                  <XMDual>
+                    <XMApp>
+                      <XMTok meaning="open-interval"/>
+                      <XMRef idref="Sx2.SSx2.p1.m5.1"/>
+                      <XMRef idref="Sx2.SSx2.p1.m5.2"/>
+                    </XMApp>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx2.p1.m5.1">t</XMTok>
+                      <XMTok role="PUNCT">,</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx2.SSx2.p1.m5.2">x</XMTok>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>, then scales as
+<Math mode="inline" tex="t^{(1-2\alpha)}g^{\prime}(x/t^{\alpha})" text="t ^ (1 - 2 * alpha) * g ^ prime * (x / t ^ alpha)" xml:id="Sx2.SSx2.p1.m6">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMDual>
+                    <XMRef idref="Sx2.SSx2.p1.m6.1"/>
+                    <XMWrap>
+                      <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                      <XMApp xml:id="Sx2.SSx2.p1.m6.1">
+                        <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                        <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                          <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                        </XMApp>
+                      </XMApp>
+                      <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">g</XMTok>
+                  <XMTok fontsize="70%" name="prime" role="SUPOP">′</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx2.SSx2.p1.m6.2"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMApp xml:id="Sx2.SSx2.p1.m6.2">
+                      <XMTok meaning="divide" role="MULOP">/</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                      <XMApp>
+                        <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                        <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                        <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                      </XMApp>
+                    </XMApp>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>. If this force acts over the time <Math mode="inline" tex="t" text="t" xml:id="Sx2.SSx2.p1.m7">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+            </XMath>
+          </Math>, it
+generates motion <Math mode="inline" tex="\sim t^{(2-2\alpha)}" text="absent similar-to t ^ (2 - 2 * alpha)" xml:id="Sx2.SSx2.p1.m8">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMTok meaning="absent"/>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMDual>
+                    <XMRef idref="Sx2.SSx2.p1.m8.1"/>
+                    <XMWrap>
+                      <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                      <XMApp xml:id="Sx2.SSx2.p1.m8.1">
+                        <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                        <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                        <XMApp>
+                          <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                          <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                          <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                        </XMApp>
+                      </XMApp>
+                      <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math><!--  %**** avoid.tex Line 175 **** -->. It is natural that this motion is
+comparable to the total extent of the motion, <Math mode="inline" tex="t^{\alpha}" text="t ^ alpha" xml:id="Sx2.SSx2.p1.m9">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>, so
+<Math mode="inline" tex="t^{(2-2\alpha)}" text="t ^ (2 - 2 * alpha)" xml:id="Sx2.SSx2.p1.m10">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMDual>
+                  <XMRef idref="Sx2.SSx2.p1.m10.1"/>
+                  <XMWrap>
+                    <XMTok fontsize="70%" role="OPEN" stretchy="false">(</XMTok>
+                    <XMApp xml:id="Sx2.SSx2.p1.m10.1">
+                      <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                      <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                      <XMApp>
+                        <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                        <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                        <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                      </XMApp>
+                    </XMApp>
+                    <XMTok fontsize="70%" role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> = <Math mode="inline" tex="t^{\alpha}" text="t ^ alpha" xml:id="Sx2.SSx2.p1.m11">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>, and <Math mode="inline" tex="\alpha=2/3" text="alpha = 2 / 3" xml:id="Sx2.SSx2.p1.m12">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" name="alpha" role="UNKNOWN">α</XMTok>
+                <XMApp>
+                  <XMTok meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>.</p>
+      </para>
+<!--  %˝ -->    </subsection>
+  </section>
+  <section xml:id="Sx3">
+    <title>Event-Chain Monte Carlo</title>
+    <para xml:id="Sx3.p1">
+      <p>Non-reversible, event-chain Monte Carlo methods are lifted variants of reversible Monte Carlo,
+where a single “active” particle is mobile, and at (to be determined) event
+times transfers motion to another particle, thereby avoiding the rejection step
+of reversible Monte Carlo methods <cite class="ltx_citemacro_cite">[<bibref bibrefs="Kapfer" separator="," yyseparator=","/>]</cite>. We here consider event-chain
+algorithms suitable for simulation of models with continuous
+potentials <cite class="ltx_citemacro_cite">[<bibref bibrefs="Manon,Faulkner" separator="," yyseparator=","/>]</cite>.</p>
+    </para>
+    <para xml:id="Sx3.p2">
+      <p>The total energy function is broken into a sum of “factor potentials”. Each of
+these factors is then able to veto the motion of the active particle when a
+stochastic criterion, is violated. <text color="#000000"> Vetos in the formulation of
+non-reversible Monte Carlo correspond to moment when a classical reversible
+algorithm would generate a rejection</text>. At the moment of veto, motion then transfers
+to another particle <text color="#000000"> allowing forward motion to continue</text>. In the case of the
+sampling of a chain, each particle is in direct interaction with its two
+neighbours, the factor potentials are then just the contribution of each bond to
+the total energy; on a veto event the activity jumps to one of the two neighbours.</p>
+    </para>
+    <para xml:id="Sx3.p3">
+      <p>Particularly exciting results for event-chain simulation were found for low-dimensional
+XY spins <cite class="ltx_citemacro_cite">[<bibref bibrefs="Lei_2018" separator="," yyseparator=","/>]</cite> where it was argued that in one dimension the dynamics
+are characterized by a dynamic exponent, <Math mode="inline" tex="z=1/2" text="z = 1 / 2" xml:id="Sx3.p3.m1">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="equals" role="RELOP">=</XMTok>
+              <XMTok font="italic" role="UNKNOWN">z</XMTok>
+              <XMApp>
+                <XMTok meaning="divide" role="MULOP">/</XMTok>
+                <XMTok meaning="1" role="NUMBER">1</XMTok>
+                <XMTok meaning="2" role="NUMBER">2</XMTok>
+              </XMApp>
+            </XMApp>
+          </XMath>
+        </Math>. This exponent links the
+relaxation time <Math mode="inline" tex="\tau" text="tau" xml:id="Sx3.p3.m2">
+          <XMath>
+            <XMTok font="italic" name="tau" role="UNKNOWN">τ</XMTok>
+          </XMath>
+        </Math> (in sweeps) of a system <Math mode="inline" tex="N" text="N" xml:id="Sx3.p3.m3">
+          <XMath>
+            <XMTok font="italic" role="UNKNOWN">N</XMTok>
+          </XMath>
+        </Math> spins via <Math mode="inline" tex="\tau\sim N^{z}" text="tau similar-to N ^ z" xml:id="Sx3.p3.m4">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+              <XMTok font="italic" name="tau" role="UNKNOWN">τ</XMTok>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">N</XMTok>
+                <XMTok font="italic" fontsize="70%" role="UNKNOWN">z</XMTok>
+              </XMApp>
+            </XMApp>
+          </XMath>
+        </Math>. This result is smaller (hence, better) than is found in conventional
+reversible Monte Carlo or molecular dynamics where one finds <Math mode="inline" tex="z=2" text="z = 2" xml:id="Sx3.p3.m5">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="equals" role="RELOP">=</XMTok>
+              <XMTok font="italic" role="UNKNOWN">z</XMTok>
+              <XMTok meaning="2" role="NUMBER">2</XMTok>
+            </XMApp>
+          </XMath>
+        </Math> or
+<Math mode="inline" tex="z=1" text="z = 1" xml:id="Sx3.p3.m6">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="equals" role="RELOP">=</XMTok>
+              <XMTok font="italic" role="UNKNOWN">z</XMTok>
+              <XMTok meaning="1" role="NUMBER">1</XMTok>
+            </XMApp>
+          </XMath>
+        </Math>. This exceptional scaling was generalized to more general models,
+including hard spheres and Lennard-Jones chains where a detailed study of the
+dynamics was performed <cite class="ltx_citemacro_cite">[<bibref bibrefs="LeiFF" separator="," yyseparator=","/>]</cite>. As noted in <cite class="ltx_citemacro_cite">[<bibref bibrefs="LeiFF" separator="," yyseparator=","/>]</cite>, a dynamic
+exponent of <Math mode="inline" tex="z=1/2" text="z = 1 / 2" xml:id="Sx3.p3.m7">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="equals" role="RELOP">=</XMTok>
+              <XMTok font="italic" role="UNKNOWN">z</XMTok>
+              <XMApp>
+                <XMTok meaning="divide" role="MULOP">/</XMTok>
+                <XMTok meaning="1" role="NUMBER">1</XMTok>
+                <XMTok meaning="2" role="NUMBER">2</XMTok>
+              </XMApp>
+            </XMApp>
+          </XMath>
+        </Math>, requires that the motion is indeed characterised by
+hyperdiffusion, <Math mode="inline" tex="x\sim t^{2/3}" text="x similar-to t ^ (2 / 3)" xml:id="Sx3.p3.m8">
+          <XMath>
+            <XMApp>
+              <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+              <XMTok font="italic" role="UNKNOWN">x</XMTok>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMApp>
+          </XMath>
+        </Math>. Rather remarkably, independent of the
+underlying physical system the large-scale dynamic processes obey identical
+hyper-diffusive dynamics. We also note that scaling of the form
+eq. (<ref labelref="LABEL:eq:scale2"/>) was found for the <text color="#000000"> number of visits to the origin
+during a simulation</text> (see in
+particular <cite class="ltx_citemacro_cite">[<bibref bibrefs="LeiFF" separator="," yyseparator=","/>]</cite> Fig. 9).</p>
+    </para>
+    <para xml:id="Sx3.p4">
+      <p>Very similar phenomenology has recently been demonstrated in a lattice model, a
+lifted version of the widely studied simple exclusion
+process <cite class="ltx_citemacro_cite">[<bibref bibrefs="DERRIDA199865,essler2023lifted" separator="," yyseparator=","/>]</cite>. <text color="#000000"> This variant of TASEP was designed to mimic certain
+aspects of non-reversible Monte Carlo, in particular the paper
+<cite class="ltx_citemacro_cite">[<bibref bibrefs="essler2023lifted" separator="," yyseparator=","/>]</cite> introduces a new backward transfer of the active particle
+inspired by the factor field construction from <cite class="ltx_citemacro_cite">[<bibref bibrefs="LeiFF" separator="," yyseparator=","/>]</cite></text><!--  %**** avoid.tex Line 225 **** -->. Here too, strong numerical
+evidence, via the Bethe ansatz, points to a non-trivial scaling of
+solutions involving <Math mode="inline" tex="t^{2/3}" text="t ^ (2 / 3)" xml:id="Sx3.p4.m1">
+          <XMath>
+            <XMApp>
+              <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+              <XMApp>
+                <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+              </XMApp>
+            </XMApp>
+          </XMath>
+        </Math>, <text color="#000000"> without giving access to scaling functions</text>. We conclude that this unusual scaling in time is
+observed in a wide variety of physical models (with very different underlying
+interactions) undergoing non-reversible dynamics subject to balance, without
+detailed balance.</p>
+    </para>
+    <subsection xml:id="Sx3.SSx1">
+      <title>Argument for algorithmic optimality</title>
+      <para xml:id="Sx3.SSx1.p1">
+        <p>We note that motion <Math mode="inline" tex="x\sim t^{2/3}" text="x similar-to t ^ (2 / 3)" xml:id="Sx3.SSx1.p1.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                    <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math> is optimal for sampling via a single tracer particle (we
+do not consider algorithms involving global updates) leading to complete
+resampling of the modes of a one-dimensional system: Consider a section of <Math mode="inline" tex="l" text="l" xml:id="Sx3.SSx1.p1.m2">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">l</XMTok>
+            </XMath>
+          </Math>
+elements within a system of particles. Peierls argument, <cite class="ltx_citemacro_cite">[<bibref bibrefs="Peierls" separator="," yyseparator=","/>]</cite>, tells
+us that the fluctuations in this section increase as <Math mode="inline" tex="|\Delta l|\sim l^{1/2}" text="absolute-value@(Delta * l) similar-to l ^ (1 / 2)" xml:id="Sx3.SSx1.p1.m3">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="absolute-value"/>
+                    <XMRef idref="Sx3.SSx1.p1.m3.1"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">|</XMTok>
+                    <XMApp xml:id="Sx3.SSx1.p1.m3.1">
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok name="Delta" role="UNKNOWN">Δ</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">l</XMTok>
+                    </XMApp>
+                    <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">l</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                    <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. After the algorithm that has been run for <Math mode="inline" tex="t" text="t" xml:id="Sx3.SSx1.p1.m4">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+            </XMath>
+          </Math> steps to sample
+the system, activity has progressed <Math mode="inline" tex="|x|\sim t^{\alpha}" text="absolute-value@(x) similar-to t ^ alpha" xml:id="Sx3.SSx1.p1.m5">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="absolute-value"/>
+                    <XMRef idref="Sx3.SSx1.p1.m5.1"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">|</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx3.SSx1.p1.m5.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. Thus,
+length fluctuations, if the section is fully re-equilibrated, are
+<Math mode="inline" tex="|\Delta l|\sim t^{\alpha/2}" text="absolute-value@(Delta * l) similar-to t ^ (alpha / 2)" xml:id="Sx3.SSx1.p1.m6">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="absolute-value"/>
+                    <XMRef idref="Sx3.SSx1.p1.m6.1"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">|</XMTok>
+                    <XMApp xml:id="Sx3.SSx1.p1.m6.1">
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok name="Delta" role="UNKNOWN">Δ</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">l</XMTok>
+                    </XMApp>
+                    <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                    <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. From eq. (<ref labelref="LABEL:eq:L"/>) we see that the number
+of visits to the starting point of the simulation is <Math mode="inline" tex="L(t,0)\sim t^{1-\alpha}" text="L * open-interval@(t, 0) similar-to t ^ (1 - alpha)" xml:id="Sx3.SSx1.p1.m7">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                  <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                  <XMDual>
+                    <XMApp>
+                      <XMTok meaning="open-interval"/>
+                      <XMRef idref="Sx3.SSx1.p1.m7.1"/>
+                      <XMRef idref="Sx3.SSx1.p1.m7.2"/>
+                    </XMApp>
+                    <XMWrap>
+                      <XMTok role="OPEN" stretchy="false">(</XMTok>
+                      <XMTok font="italic" role="UNKNOWN" xml:id="Sx3.SSx1.p1.m7.1">t</XMTok>
+                      <XMTok role="PUNCT">,</XMTok>
+                      <XMTok meaning="0" role="NUMBER" xml:id="Sx3.SSx1.p1.m7.2">0</XMTok>
+                      <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                    </XMWrap>
+                  </XMDual>
+                </XMApp>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                    <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                    <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. If we identify the two expressions for the displacement then
+<Math mode="inline" tex="t^{1-\alpha}\sim|\Delta l|\sim t^{\alpha/2}" text="t ^ (1 - alpha) similar-to absolute-value@(Delta * l) similar-to t ^ (alpha / 2)" xml:id="Sx3.SSx1.p1.m8">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="multirelation"/>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                    <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                    <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                  </XMApp>
+                </XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="absolute-value"/>
+                    <XMRef idref="Sx3.SSx1.p1.m8.1"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">|</XMTok>
+                    <XMApp xml:id="Sx3.SSx1.p1.m8.1">
+                      <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                      <XMTok name="Delta" role="UNKNOWN">Δ</XMTok>
+                      <XMTok font="italic" role="UNKNOWN">l</XMTok>
+                    </XMApp>
+                    <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok font="italic" fontsize="70%" name="alpha" role="UNKNOWN">α</XMTok>
+                    <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>, or <Math mode="inline" tex="\alpha=2/3" text="alpha = 2 / 3" xml:id="Sx3.SSx1.p1.m9">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" name="alpha" role="UNKNOWN">α</XMTok>
+                <XMApp>
+                  <XMTok meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. Thus the
+amplitude of fluctuations, needed to re-equilibrate the section, is comparable to the
+number of returns of the algorithm to the origin, and thus the maximum
+displacement that can be generated for the origin in the time <Math mode="inline" tex="t" text="t" xml:id="Sx3.SSx1.p1.m10">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+            </XMath>
+          </Math>.</p>
+      </para>
+    </subsection>
+    <subsection xml:id="Sx3.SSx2">
+      <title>Self-repelling motion and non-reversible simulation</title>
+      <para xml:id="Sx3.SSx2.p1">
+        <p>We now simulate with an event-chain Monte Carlo an elastic chain at temperature, <Math mode="inline" tex="T=1" text="T = 1" xml:id="Sx3.SSx2.p1.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">T</XMTok>
+                <XMTok meaning="1" role="NUMBER">1</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>, with harmonic
+springs of unit strength, starting with a zero-temperature configuration. For
+concreteness, the active particle moves in the <Math mode="inline" tex="+x" text="+ x" xml:id="Sx3.SSx2.p1.m2">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="plus" role="ADDOP">+</XMTok>
+                <XMTok font="italic" role="UNKNOWN">x</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> direction. The
+algorithm proposes, at each time step, a displacement of the active
+particle which is vetoed after motion by a distance <Math mode="inline" tex="O(1)" text="O * 1" xml:id="Sx3.SSx2.p1.m3">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMTok font="italic" role="UNKNOWN">O</XMTok>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m3.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="1" role="NUMBER" xml:id="Sx3.SSx2.p1.m3.1">1</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>. Consider now
+a section of the chain, of <Math mode="inline" tex="l+1" text="l + 1" xml:id="Sx3.SSx2.p1.m4">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="plus" role="ADDOP">+</XMTok>
+                <XMTok font="italic" role="UNKNOWN">l</XMTok>
+                <XMTok meaning="1" role="NUMBER">1</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> sites of the system <Math mode="inline" tex="[0,l]" text="closed-interval@(0, l)" xml:id="Sx3.SSx2.p1.m5">
+            <XMath>
+              <XMDual>
+                <XMApp>
+                  <XMTok meaning="closed-interval"/>
+                  <XMRef idref="Sx3.SSx2.p1.m5.1"/>
+                  <XMRef idref="Sx3.SSx2.p1.m5.2"/>
+                </XMApp>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">[</XMTok>
+                  <XMTok meaning="0" role="NUMBER" xml:id="Sx3.SSx2.p1.m5.1">0</XMTok>
+                  <XMTok role="PUNCT">,</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx3.SSx2.p1.m5.2">l</XMTok>
+                  <XMTok role="CLOSE" stretchy="false">]</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMath>
+          </Math>, which has been
+uniformly stretched, after running the algorithm for some time. For this to have
+occurred, there must have been more visits to the site labelled <Math mode="inline" tex="l" text="l" xml:id="Sx3.SSx2.p1.m6">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">l</XMTok>
+            </XMath>
+          </Math> than to the
+site <Math mode="inline" tex="0" text="0" xml:id="Sx3.SSx2.p1.m7">
+            <XMath>
+              <XMTok meaning="0" role="NUMBER">0</XMTok>
+            </XMath>
+          </Math>, for instance for l=4 the zig-zag trajectory
+<Math mode="inline" tex="(01234)(32)(1234)(3)(234)(34)" text="01234 * 32 * 1234 * 3 * 234 * 34" xml:id="Sx3.SSx2.p1.m8">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m8.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="01234" role="NUMBER" xml:id="Sx3.SSx2.p1.m8.1">01234</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m8.2"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="32" role="NUMBER" xml:id="Sx3.SSx2.p1.m8.2">32</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m8.3"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="1234" role="NUMBER" xml:id="Sx3.SSx2.p1.m8.3">1234</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m8.4"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="3" role="NUMBER" xml:id="Sx3.SSx2.p1.m8.4">3</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m8.5"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="234" role="NUMBER" xml:id="Sx3.SSx2.p1.m8.5">234</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+                <XMDual>
+                  <XMRef idref="Sx3.SSx2.p1.m8.6"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok meaning="34" role="NUMBER" xml:id="Sx3.SSx2.p1.m8.6">34</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> generates a stretched chain with number of
+visits for each site, <Math mode="inline" tex="L_{i}=[1,2,4,6,\dots]" text="L _ i = list@(1, 2, 4, 6, dots)" xml:id="Sx3.SSx2.p1.m9">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                  <XMTok font="italic" fontsize="70%" role="UNKNOWN">i</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="list"/>
+                    <XMRef idref="Sx3.SSx2.p1.m9.1"/>
+                    <XMRef idref="Sx3.SSx2.p1.m9.2"/>
+                    <XMRef idref="Sx3.SSx2.p1.m9.3"/>
+                    <XMRef idref="Sx3.SSx2.p1.m9.4"/>
+                    <XMRef idref="Sx3.SSx2.p1.m9.5"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">[</XMTok>
+                    <XMTok meaning="1" role="NUMBER" xml:id="Sx3.SSx2.p1.m9.1">1</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="2" role="NUMBER" xml:id="Sx3.SSx2.p1.m9.2">2</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="4" role="NUMBER" xml:id="Sx3.SSx2.p1.m9.3">4</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="6" role="NUMBER" xml:id="Sx3.SSx2.p1.m9.4">6</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok name="dots" role="ID" xml:id="Sx3.SSx2.p1.m9.5">…</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">]</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>. This stretching then influences
+the future motion of the active particle. Such a stretch leads to a higher veto
+rate for transfers of the activity to the left of the chain, opposite to the
+gradient in <Math mode="inline" tex="L_{i}" text="L _ i" xml:id="Sx3.SSx2.p1.m10">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                <XMTok font="italic" fontsize="70%" role="UNKNOWN">i</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>. However, this is exactly the phenomenology of
+eq. (<ref labelref="LABEL:eq:motion"/>). If the exact details of the local update rule are not
+crucial in the dynamics and some form of large-scale universality applies
+eqs. (<ref labelref="LABEL:eq:motion"/>, <ref labelref="LABEL:eq:density"/><!--  %**** avoid.tex Line 275 **** -->) are clearly candidates for a
+coarse-grained description of the motion generated by event-chain Monte
+Carlo. In event-chain simulation in higher dimension, we understand that
+relative motion of particles leads to a heterogeneous buildup in stress which
+will then back-react on the motion of the active particle, leading to a very
+similar coupling of motion and history, <text color="#000000"> though presumably the tensorial
+nature of stress in higher dimensions will change the exact mapping onto the
+self-avoiding walk</text>.</p>
+      </para>
+    </subsection>
+  </section>
+  <section xml:id="Sx4">
+    <title>Numerical results</title>
+    <subsection xml:id="Sx4.SSx1">
+      <title>Elastic chain</title>
+      <figure inlist="lof" labels="LABEL:fig:nu1" xml:id="Sx4.F1">
+        <tags>
+          <tag>Figure 1</tag>
+          <tag role="autoref">Figure 1</tag>
+          <tag role="refnum">1</tag>
+          <tag role="typerefnum">Figure 1</tag>
+        </tags>
+        <graphics candidates="nu1.pdf,nu1.png" graphic="nu1" options="width=281.85034pt,keepaspectratio=true" xml:id="Sx4.F1.g1"/>
+        <toccaption><tag close=" ">1</tag>Scaling function for distribution, <Math mode="inline" tex="\nu_{1}(x)" text="nu _ 1 * x" xml:id="Sx4.F1.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.F1.m1.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F1.m1.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>, eq. (<ref labelref="LABEL:eq:nu1"/>)
+curve in red, compared to simulation data where we have saved the index of
+the final point of a trajectory, blue histogram. The distribution is a
+function of only <Math mode="inline" tex="|x|" text="absolute-value@(x)" xml:id="Sx4.F1.m2">
+            <XMath>
+              <XMDual>
+                <XMApp>
+                  <XMTok meaning="absolute-value"/>
+                  <XMRef idref="Sx4.F1.m2.1"/>
+                </XMApp>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">|</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F1.m2.1">x</XMTok>
+                  <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMath>
+          </Math>, and is singular at <Math mode="inline" tex="x=0" text="x = 0" xml:id="Sx4.F1.m3">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>. The empirical distribution has a
+standard deviation of <Math mode="inline" tex="\sim 16,500" text="absent similar-to list@(16, 500)" xml:id="Sx4.F1.m4">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMTok meaning="absent"/>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="list"/>
+                    <XMRef idref="Sx4.F1.m4.1"/>
+                    <XMRef idref="Sx4.F1.m4.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok meaning="16" role="NUMBER" xml:id="Sx4.F1.m4.1">16</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="500" role="NUMBER" xml:id="Sx4.F1.m4.2">500</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> sites. </toccaption>
+        <caption><tag close=": ">Figure 1</tag>Scaling function for distribution, <Math mode="inline" tex="\nu_{1}(x)" text="nu _ 1 * x" xml:id="Sx4.F1.m5">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.F1.m5.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F1.m5.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>, eq. (<ref labelref="LABEL:eq:nu1"/>)
+curve in red, compared to simulation data where we have saved the index of
+the final point of a trajectory, blue histogram. The distribution is a
+function of only <Math mode="inline" tex="|x|" text="absolute-value@(x)" xml:id="Sx4.F1.m6">
+            <XMath>
+              <XMDual>
+                <XMApp>
+                  <XMTok meaning="absolute-value"/>
+                  <XMRef idref="Sx4.F1.m6.1"/>
+                </XMApp>
+                <XMWrap>
+                  <XMTok role="OPEN" stretchy="false">|</XMTok>
+                  <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F1.m6.1">x</XMTok>
+                  <XMTok role="CLOSE" stretchy="false">|</XMTok>
+                </XMWrap>
+              </XMDual>
+            </XMath>
+          </Math>, and is singular at <Math mode="inline" tex="x=0" text="x = 0" xml:id="Sx4.F1.m7">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>. The empirical distribution has a
+standard deviation of <Math mode="inline" tex="\sim 16,500" text="absent similar-to list@(16, 500)" xml:id="Sx4.F1.m8">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="similar-to" name="sim" role="RELOP">∼</XMTok>
+                <XMTok meaning="absent"/>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="list"/>
+                    <XMRef idref="Sx4.F1.m8.1"/>
+                    <XMRef idref="Sx4.F1.m8.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok meaning="16" role="NUMBER" xml:id="Sx4.F1.m8.1">16</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="500" role="NUMBER" xml:id="Sx4.F1.m8.2">500</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> sites. </caption>
+      </figure>
+      <para xml:id="Sx4.SSx1.p1">
+        <p>We generate data for the simulation of an elastic chain of <Math mode="inline" tex="N" text="N" xml:id="Sx4.SSx1.p1.m1">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">N</XMTok>
+            </XMath>
+          </Math> particles linked
+by harmonic springs. We initialise the chain to its ground state.
+We then perform <Math mode="inline" tex="m=134\times 10^{6}" text="m = 134 * 10 ^ 6" xml:id="Sx4.SSx1.p1.m2">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">m</XMTok>
+                <XMApp>
+                  <XMTok meaning="times" role="MULOP">×</XMTok>
+                  <XMTok meaning="134" role="NUMBER">134</XMTok>
+                  <XMApp>
+                    <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                    <XMTok meaning="10" role="NUMBER">10</XMTok>
+                    <XMTok fontsize="70%" meaning="6" role="NUMBER">6</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math> simulations
+starting at the origin, (<Math mode="inline" tex="i=0" text="i = 0" xml:id="Sx4.SSx1.p1.m3">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">i</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>) corresponding to <Math mode="inline" tex="x=0" text="x = 0" xml:id="Sx4.SSx1.p1.m4">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">x</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> in the figures. Our
+simulated systems are periodic, but all simulations are too short in time to be
+influenced by the choice of a finite <Math mode="inline" tex="N" text="N" xml:id="Sx4.SSx1.p1.m5">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">N</XMTok>
+            </XMath>
+          </Math>, or to see wrap-around of trajectories.
+As is usual in event-driven Monte Carlo we simulate for an imposed chain length
+which we take here as <Math mode="inline" tex="t=10^{6}" text="t = 10 ^ 6" xml:id="Sx4.SSx1.p1.m6">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                  <XMTok meaning="10" role="NUMBER">10</XMTok>
+                  <XMTok fontsize="70%" meaning="6" role="NUMBER">6</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. The mean-free path is slightly greater than unity, so
+this corresponds to very nearly <Math mode="inline" tex="10^{6}" text="10 ^ 6" xml:id="Sx4.SSx1.p1.m7">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok meaning="10" role="NUMBER">10</XMTok>
+                <XMTok fontsize="70%" meaning="6" role="NUMBER">6</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> transfers of activity.</p>
+      </para>
+<!--  %We are not sampling from the Boltzmann distribution, rather studying the 
+     %dynamics, so we do not stop the simulation after a pre-specified chain length as 
+     %is usually required in event-chain sampling. -->      <para xml:id="Sx4.SSx1.p2">
+        <p>During each simulation, we cumulate
+the number of visits to each site by the active particle, <text color="#000000"> in a manner analogous to eq (<ref labelref="LABEL:eq:disc"/>) </text>
+which we again denote <Math mode="inline" tex="L_{i}(t)" text="L _ i * t" xml:id="Sx4.SSx1.p2.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" role="UNKNOWN">L</XMTok>
+                  <XMTok font="italic" fontsize="70%" role="UNKNOWN">i</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.SSx1.p2.m1.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.SSx1.p2.m1.1">t</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>. At the end of
+each of the <Math mode="inline" tex="m" text="m" xml:id="Sx4.SSx1.p2.m2">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">m</XMTok>
+            </XMath>
+          </Math> simulations we save the index of the final active particle (which in the continuum
+limit corresponds to a displacement <Math mode="inline" tex="x" text="x" xml:id="Sx4.SSx1.p2.m3">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">x</XMTok>
+            </XMath>
+          </Math>), as
+well as the number of visits of the active particle to the final chain position
+<text color="#000000"> corresponding to the variable
+<Math mode="inline" tex="h" text="h" xml:id="Sx4.SSx1.p2.m4">
+              <XMath>
+                <XMTok font="italic" role="UNKNOWN">h</XMTok>
+              </XMath>
+            </Math> of eq. (<ref labelref="LABEL:eq:nu2"/>)</text>. After the simulation, the data is binned generating empirical
+distributions, that we compare with eqs. (<ref labelref="LABEL:eq:nu1"/>, <ref labelref="LABEL:eq:nu2"/>), see
+Figs. <ref labelref="LABEL:fig:nu1"/>, <ref labelref="LABEL:fig:nu2"/>. <text color="#000000"><!--  %**** avoid.tex Line 325 **** --> The red
+curves are the analytic results; blue shading corresponds to binned data from the Monte
+Carlo data. Fig. <ref labelref="LABEL:fig:nu1"/> corresponds to some 40,000 bins in the data,
+which give the appearance of a continuous curve.</text>
+The
+curves represent probability distributions and are thus automatically normalized
+to unit area. The only free variable in comparing the analytic expressions to
+the binned numerical data is the choice of the horizontal scale. We fix
+this one scale by imposing that the first moment of the empirical
+curve matches the theoretical expression.</p>
+      </para>
+      <figure inlist="lof" labels="LABEL:fig:nu2" xml:id="Sx4.F2">
+        <tags>
+          <tag>Figure 2</tag>
+          <tag role="autoref">Figure 2</tag>
+          <tag role="refnum">2</tag>
+          <tag role="typerefnum">Figure 2</tag>
+        </tags>
+        <graphics candidates="nu2.pdf" graphic="nu2" options="width=281.85034pt,keepaspectratio=true" xml:id="Sx4.F2.g1"/>
+        <toccaption><tag close=" ">2</tag>Scaling function for the number of site visits at the end-point of
+motion, <Math mode="inline" tex="\nu_{2}(h)" text="nu _ 2 * h" xml:id="Sx4.F2.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.F2.m1.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F2.m1.1">h</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> eq. (<ref labelref="LABEL:eq:nu2"/>) curve in red, compared to simulation
+data, blue histogram. Same simulation
+as Fig. <ref labelref="LABEL:fig:nu1"/></toccaption>
+        <caption><tag close=": ">Figure 2</tag>Scaling function for the number of site visits at the end-point of
+motion, <Math mode="inline" tex="\nu_{2}(h)" text="nu _ 2 * h" xml:id="Sx4.F2.m2">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.F2.m2.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F2.m2.1">h</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> eq. (<ref labelref="LABEL:eq:nu2"/>) curve in red, compared to simulation
+data, blue histogram. Same simulation
+as Fig. <ref labelref="LABEL:fig:nu1"/></caption>
+      </figure>
+<!--  %We plot the results of our analysis Fig.~“ref–fig:nu1˝, for the displacement 
+     %distribution function $“rho˙1$, and for the local time distribution $“rho˙2$, 
+     %Fig.~“ref–fig:nu2˝.  The solid (red) lines are the analytic expressions. -->      <para xml:id="Sx4.SSx1.p3">
+        <p><!--  %**** avoid.tex Line 350 **** -->We
+find excellent agreement between theory and numerics. We note, in particular,
+that as predicted by theory the distribution of Fig. <ref labelref="LABEL:fig:nu1"/> has a singularity at
+the origin.
+The empirical curve, Fig. <ref labelref="LABEL:fig:nu2"/>, for
+<Math mode="inline" tex="\rho_{2}" text="rho _ 2" xml:id="Sx4.SSx1.p3.m1">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> at <Math mode="inline" tex="h=0" text="h = 0" xml:id="Sx4.SSx1.p3.m2">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> is systematically lower than the red, theoretical curve, this
+corresponds to simulations that finish on an as-yet unvisited site. This empirical curve,
+thus converges weakly to the theory, with the bar at <Math mode="inline" tex="h=0" text="h = 0" xml:id="Sx4.SSx1.p3.m3">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">h</XMTok>
+                <XMTok meaning="0" role="NUMBER">0</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> squeezed to zero
+width at the origin
+as <Math mode="inline" tex="t" text="t" xml:id="Sx4.SSx1.p3.m4">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">t</XMTok>
+            </XMath>
+          </Math> increases.
+We also performed simulations starting from a pre-equilibrated
+physical system. In this case, we find very similar distributions to those
+plotted in Figs. <ref labelref="LABEL:fig:nu1"/>, <ref labelref="LABEL:fig:nu2"/> with however, a change of scale in
+the axes, see also <cite class="ltx_citemacro_cite">[<bibref bibrefs="DUMAZ20131454" separator="," yyseparator=","/>]</cite>.</p>
+      </para>
+    </subsection>
+    <subsection xml:id="Sx4.SSx2">
+      <title>Lifted TASEP</title>
+      <para xml:id="Sx4.SSx2.p1">
+        <p>Finally, we perform a numerical study of the lifted TASEP model <cite class="ltx_citemacro_cite">[<bibref bibrefs="essler2023lifted" separator="," yyseparator=","/>]</cite>. We consider a system of <Math mode="inline" tex="N" text="N" xml:id="Sx4.SSx2.p1.m1">
+            <XMath>
+              <XMTok font="italic" role="UNKNOWN">N</XMTok>
+            </XMath>
+          </Math> particles on a periodic
+lattice of length <Math mode="inline" tex="2N" text="2 * N" xml:id="Sx4.SSx2.p1.m2">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMTok meaning="2" role="NUMBER">2</XMTok>
+                <XMTok font="italic" role="UNKNOWN">N</XMTok>
+              </XMApp>
+            </XMath>
+          </Math>. <text color="#000000"> This new variant on the TASEP is a model of
+impenetrable particle motion on a lattice, in which collisions cause transfers
+of velocity. The modification in the calculation of <cite class="ltx_citemacro_cite">[<bibref bibrefs="essler2023lifted" separator="," yyseparator=","/>]</cite><!--  %**** avoid.tex Line 375 **** --> is
+the addition of a backward transfer of particle motion. For a special value of
+the backward transfer rate the lifted TASEP displays accelerated relaxation dynamics in
+density-density correlations in a manner which is similar to that displayed in
+continuum particle models<cite class="ltx_citemacro_cite">[<bibref bibrefs="LeiFF" separator="," yyseparator=","/>]</cite>. We study this TASEP model only at this
+specific value of the backward rate where the dynamics is highly accelerated.</text></p>
+      </para>
+      <para xml:id="Sx4.SSx2.p2">
+        <p>We initialise the system in a crystal of equally spaced
+particles. Simulations on short times give rise to an asymmetric distribution
+from for <Math mode="inline" tex="\rho_{1}(x)" text="rho _ 1 * x" xml:id="Sx4.SSx2.p2.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.SSx2.p2.m1.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.SSx2.p2.m1.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> (Fig. <ref labelref="LABEL:fig:tasep"/>, top), but longer simulations give a
+very slow convergence to a more symmetric form (Fig. <ref labelref="LABEL:fig:tasep"/>,
+bottom). We conclude that the lifted TASEP displays very similar phenomenology
+to the harmonic chain, and is also in the same dynamic universality class as
+true self-avoiding motion. We also confirmed, for lifted TASEP, the expected
+scaling of displacement of the activity in <Math mode="inline" tex="t^{2/3}" text="t ^ (2 / 3)" xml:id="Sx4.SSx2.p2.m2">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>,
+Fig. <ref labelref="LABEL:fig:moments"/> (top). Fig. <ref labelref="LABEL:fig:moments"/>, (bottom) shows that
+distribution of displacement is strongly skewed for short times; it is only after a
+long simulation that the back-forwards symmetry is established
+When we start with a configuration which is generated randomly, the initial asymmetry is weaker, though
+not zero.</p>
+      </para>
+      <figure inlist="lof" labels="LABEL:fig:tasep" xml:id="Sx4.F3">
+        <tags>
+          <tag>Figure 3</tag>
+          <tag role="autoref">Figure 3</tag>
+          <tag role="refnum">3</tag>
+          <tag role="typerefnum">Figure 3</tag>
+        </tags>
+        <graphics candidates="tasep.pdf" graphic="tasep" options="width=281.85034pt,keepaspectratio=true" xml:id="Sx4.F3.g1"/>
+        <toccaption><tag close=" ">3</tag>Distribution of displacements of the activity <Math mode="inline" tex="\rho_{1}(t,x)" text="rho _ 1 * open-interval@(t, x)" xml:id="Sx4.F3.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="open-interval"/>
+                    <XMRef idref="Sx4.F3.m1.1"/>
+                    <XMRef idref="Sx4.F3.m1.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F3.m1.1">t</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F3.m1.2">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>, for lifted
+TASEP. Top, a short simulation of <Math mode="inline" tex="t=256" text="t = 256" xml:id="Sx4.F3.m2">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMTok meaning="256" role="NUMBER">256</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> steps generates a skewed
+distribution. Bottom, a longer time scale of <Math mode="inline" tex="t=262,144" text="t = list@(262, 144)" xml:id="Sx4.F3.m3">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="list"/>
+                    <XMRef idref="Sx4.F3.m3.1"/>
+                    <XMRef idref="Sx4.F3.m3.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok meaning="262" role="NUMBER" xml:id="Sx4.F3.m3.1">262</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="144" role="NUMBER" xml:id="Sx4.F3.m3.2">144</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> generates a
+distribution which is close to that found in Fig. <ref labelref="LABEL:fig:nu1"/>, while still
+displaying a very slight left-right asymmetry. Scaled curve of <Math mode="inline" tex="\nu_{1}(x)" text="nu _ 1 * x" xml:id="Sx4.F3.m4">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.F3.m4.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F3.m4.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>
+red/dashed.</toccaption>
+        <caption><tag close=": ">Figure 3</tag>Distribution of displacements of the activity <Math mode="inline" tex="\rho_{1}(t,x)" text="rho _ 1 * open-interval@(t, x)" xml:id="Sx4.F3.m5">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="open-interval"/>
+                    <XMRef idref="Sx4.F3.m5.1"/>
+                    <XMRef idref="Sx4.F3.m5.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F3.m5.1">t</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F3.m5.2">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>, for lifted
+TASEP. Top, a short simulation of <Math mode="inline" tex="t=256" text="t = 256" xml:id="Sx4.F3.m6">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMTok meaning="256" role="NUMBER">256</XMTok>
+              </XMApp>
+            </XMath>
+          </Math> steps generates a skewed
+distribution. Bottom, a longer time scale of <Math mode="inline" tex="t=262,144" text="t = list@(262, 144)" xml:id="Sx4.F3.m7">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="equals" role="RELOP">=</XMTok>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="list"/>
+                    <XMRef idref="Sx4.F3.m7.1"/>
+                    <XMRef idref="Sx4.F3.m7.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok meaning="262" role="NUMBER" xml:id="Sx4.F3.m7.1">262</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok meaning="144" role="NUMBER" xml:id="Sx4.F3.m7.2">144</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> generates a
+distribution which is close to that found in Fig. <ref labelref="LABEL:fig:nu1"/>, while still
+displaying a very slight left-right asymmetry. Scaled curve of <Math mode="inline" tex="\nu_{1}(x)" text="nu _ 1 * x" xml:id="Sx4.F3.m8">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="nu" role="UNKNOWN">ν</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMRef idref="Sx4.F3.m8.1"/>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F3.m8.1">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math>
+red/dashed.</caption>
+      </figure>
+      <figure inlist="lof" labels="LABEL:fig:moments" xml:id="Sx4.F4">
+        <tags>
+          <tag>Figure 4</tag>
+          <tag role="autoref">Figure 4</tag>
+          <tag role="refnum">4</tag>
+          <tag role="typerefnum">Figure 4</tag>
+        </tags>
+        <graphics candidates="moments.pdf" graphic="moments" options="width=281.85034pt,keepaspectratio=true" xml:id="Sx4.F4.g1"/>
+        <toccaption><tag close=" ">4</tag>Evolution of moments of <Math mode="inline" tex="\rho_{1}(t,x)" text="rho _ 1 * open-interval@(t, x)" xml:id="Sx4.F4.m1">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="open-interval"/>
+                    <XMRef idref="Sx4.F4.m1.1"/>
+                    <XMRef idref="Sx4.F4.m1.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F4.m1.1">t</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F4.m1.2">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> for lifted TASEP. Top: standard
+deviation of the distribution, compared to evolution in <Math mode="inline" tex="t^{2/3}" text="t ^ (2 / 3)" xml:id="Sx4.F4.m2">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. Bottom,
+skewness (normalized third moment) compared to <Math mode="inline" tex="t^{-1/3}" text="t ^ (- 1 / 3)" xml:id="Sx4.F4.m3">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                    <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. The decrease in
+skewness corresponds to a distribution which progressively becomes more
+symmetric.</toccaption>
+        <caption><tag close=": ">Figure 4</tag>Evolution of moments of <Math mode="inline" tex="\rho_{1}(t,x)" text="rho _ 1 * open-interval@(t, x)" xml:id="Sx4.F4.m4">
+            <XMath>
+              <XMApp>
+                <XMTok meaning="times" role="MULOP">⁢</XMTok>
+                <XMApp>
+                  <XMTok role="SUBSCRIPTOP" scriptpos="post1"/>
+                  <XMTok font="italic" name="rho" role="UNKNOWN">ρ</XMTok>
+                  <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                </XMApp>
+                <XMDual>
+                  <XMApp>
+                    <XMTok meaning="open-interval"/>
+                    <XMRef idref="Sx4.F4.m4.1"/>
+                    <XMRef idref="Sx4.F4.m4.2"/>
+                  </XMApp>
+                  <XMWrap>
+                    <XMTok role="OPEN" stretchy="false">(</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F4.m4.1">t</XMTok>
+                    <XMTok role="PUNCT">,</XMTok>
+                    <XMTok font="italic" role="UNKNOWN" xml:id="Sx4.F4.m4.2">x</XMTok>
+                    <XMTok role="CLOSE" stretchy="false">)</XMTok>
+                  </XMWrap>
+                </XMDual>
+              </XMApp>
+            </XMath>
+          </Math> for lifted TASEP. Top: standard
+deviation of the distribution, compared to evolution in <Math mode="inline" tex="t^{2/3}" text="t ^ (2 / 3)" xml:id="Sx4.F4.m5">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                  <XMTok fontsize="70%" meaning="2" role="NUMBER">2</XMTok>
+                  <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. Bottom,
+skewness (normalized third moment) compared to <Math mode="inline" tex="t^{-1/3}" text="t ^ (- 1 / 3)" xml:id="Sx4.F4.m6">
+            <XMath>
+              <XMApp>
+                <XMTok role="SUPERSCRIPTOP" scriptpos="post1"/>
+                <XMTok font="italic" role="UNKNOWN">t</XMTok>
+                <XMApp>
+                  <XMTok fontsize="70%" meaning="minus" role="ADDOP">-</XMTok>
+                  <XMApp>
+                    <XMTok fontsize="70%" meaning="divide" role="MULOP">/</XMTok>
+                    <XMTok fontsize="70%" meaning="1" role="NUMBER">1</XMTok>
+                    <XMTok fontsize="70%" meaning="3" role="NUMBER">3</XMTok>
+                  </XMApp>
+                </XMApp>
+              </XMApp>
+            </XMath>
+          </Math>. The decrease in
+skewness corresponds to a distribution which progressively becomes more
+symmetric.</caption>
+      </figure>
+    </subsection>
+  </section>
+  <section xml:id="Sx5">
+    <title>Conclusions</title>
+    <para xml:id="Sx5.p1">
+      <p>To conclude, we have presented <text color="#000000"> numerical evidence</text> that the evolution of a system
+subject to non-reversible Monte Carlo is directly linked to the continuum limit
+of a growth model <cite class="ltx_citemacro_cite">[<bibref bibrefs="Amit" separator="," yyseparator=","/>]</cite>. We performed extensive simulations using an event
+chain algorithm and compared the resulting distributions to those calculated
+in <cite class="ltx_citemacro_cite">[<bibref bibrefs="Toth,DUMAZ20131454,tothProc" separator="," yyseparator=","/>]</cite><!--  %**** avoid.tex Line 425 **** -->. We find excellent agreement, for both a harmonic
+chain, and for the non-harmonic lifted TASEP, and so conclude that the
+non-reversible algorithm is indeed a realisation of a true self-repelling
+motion. <text color="#000000"> We have shown that several <text font="slanted">very different</text> physical systems are
+members of the same dynamic universality class. It would be of great
+interest to understand why this is the case, and whether other
+systems display the same scaling behavior. As noted by <cite class="ltx_citemacro_cite">[<bibref bibrefs="DUMAZ20131454" separator="," yyseparator=","/>]</cite> this
+universality class is distinct from KPZ (Kardar-Parisi-Zhang), even though
+similar special functions appear in the solutions</text>.</p>
+    </para>
+    <para xml:id="Sx5.p2">
+      <p>Event-chain methods, including factor fields, have been generalized to higher
+dimensions <cite class="ltx_citemacro_cite">[<bibref bibrefs="Maggs_2022" separator="," yyseparator=","/>]</cite>. It would be of interest to transfer the formalism
+of the present letter to such systems, perhaps using the approach of <cite class="ltx_citemacro_cite">[<bibref bibrefs="toth-net" separator="," yyseparator=","/>]</cite>. Applications in
+Monte Carlo simulation also require generalisations of the continuum
+equations to include extra, drift, terms due to coupling to external stresses <cite class="ltx_citemacro_cite">[<bibref bibrefs="Manon" separator="," yyseparator=","/>]</cite>.</p>
+    </para>
+<!--  %large deviations “cite–Schawe˙2019˝. -->    <para xml:id="Sx5.p3">
+      <p>The code used to simulate the two physical systems, as well as the plotting and analysis code
+is available from <text color="#000000"> <ref class="ltx_url" font="typewriter" href="https://github.com/acmaggs/Avoid">https://github.com/acmaggs/Avoid</ref></text>.</p>
+    </para>
+    <acknowledgements><!--  %“acknowledgements 
+     %iop -->The author would like to thank Werner Krauth for extensive discussions on
+the subject of non-reversible simulation and lattice models.  <!--  %“vskip 1cm --></acknowledgements>
+  </section>
+  <section xml:id="Sx6">
+    <title>References</title>
+  </section>
+  <bibliography bibstyle="iopart-num" citestyle="numbers" files="avoid" xml:id="bib">
+    <title>References</title>
+  </bibliography>
+</document>
